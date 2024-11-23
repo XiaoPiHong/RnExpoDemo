@@ -88,5 +88,5 @@ const createLocalStorage = createStore(appStorage);
 export const local = {
   i18n: createLocalStorage("i18n"), // 当前语言
   // user: createLocalStorage("user", FilterTypeEnum.JSON),
-  // accessToken: createLocalStorage("accessToken"),
+  accessToken: createLocalStorage("accessToken"),
 };
