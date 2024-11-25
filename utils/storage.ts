@@ -1,18 +1,15 @@
-import {MMKV} from "react-native-mmkv";
+import * as SecureStore from "expo-secure-store"; // @expo/secure-store 值最大存储2048字节
 
-const mmkvStorage = new MMKV();
 export const appStorage = {
   setItem: (key, value) => {
-    mmkvStorage.set(key, value);
-    return Promise.resolve(true);
+    return SecureStore.setItemAsync(key, value);
   },
-  getItem: key => {
-    const value = mmkvStorage.getString(key);
-    return Promise.resolve(value);
+
+  getItem: (key) => {
+    return SecureStore.getItemAsync(key);
   },
-  removeItem: key => {
-    mmkvStorage.delete(key);
-    return Promise.resolve();
+  removeItem: (key) => {
+    SecureStore.deleteItemAsync(key);
   },
 };
 
@@ -28,13 +25,13 @@ enum FilterTypeEnum {
  */
 const filterTypeToFilterMap = new Map<
   FilterTypeEnum,
-  {get: (value) => any; set: (value) => string}
+  { get: (value) => any; set: (value) => string }
 >([
   [
     FilterTypeEnum.JSON,
     {
-      get: value => JSON.parse(value),
-      set: value => JSON.stringify(value),
+      get: (value) => JSON.parse(value),
+      set: (value) => JSON.stringify(value),
     },
   ],
 ]);
