@@ -1,7 +1,8 @@
 import { Tabs } from "expo-router";
 import React from "react";
 import { Platform } from "react-native";
-
+import { useSelector } from "react-redux";
+import { TRootState } from "@/store/store";
 import { HapticTab } from "@/components/HapticTab";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import TabBarBackground from "@/components/ui/TabBarBackground";
@@ -11,6 +12,8 @@ import * as storageUtils from "@/utils/storage";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const user = useSelector((state: TRootState) => state.user);
+  console.log(user);
   console.log(storageUtils);
   return (
     <Tabs

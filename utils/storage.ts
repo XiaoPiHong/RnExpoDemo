@@ -9,7 +9,7 @@ export const appStorage = {
     return SecureStore.getItemAsync(key);
   },
   removeItem: (key) => {
-    SecureStore.deleteItemAsync(key);
+    return SecureStore.deleteItemAsync(key);
   },
 };
 
