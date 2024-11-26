@@ -14,7 +14,6 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
   const user = useSelector((state: TRootState) => state.user);
   console.log(user);
-  console.log(storageUtils);
   return (
     <Tabs
       screenOptions={{

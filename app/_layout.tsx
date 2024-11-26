@@ -10,13 +10,16 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import ReduxProvider from "@/store";
-
+import "@/i18n";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import useI18n from "@/hooks/useI18n";
+import { Text } from "react-native";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const { t } = useI18n();
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
@@ -34,6 +37,7 @@ export default function RootLayout() {
 
   return (
     <ReduxProvider>
+      <Text>{t("login.username")}</Text>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

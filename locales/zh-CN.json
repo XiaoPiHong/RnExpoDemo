@@ -1,0 +1,18 @@
+{
+  "noInternet": {
+    "networkAbnormality": "网络异常",
+    "tips": {
+      "networkCheck": "请检查你的网络"
+    }
+  },
+  "login": {
+    "username": "用户名",
+    "password": "密码",
+    "upLogin": "登录",
+    "tips": {
+      "usernameAndPasswordNotNull": "请输入用户名和密码"
+    }
+  },
+  "home": {},
+  "settings": {}
+}
