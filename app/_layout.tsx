@@ -1,26 +1,18 @@
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
+/** 该文件可看作App.tsx */
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import ReduxProvider from "@/store";
+import { Slot } from "expo-router";
 import "@/i18n";
-import { useColorScheme } from "@/hooks/useColorScheme";
-import useI18n from "@/hooks/useI18n";
-import { Text } from "react-native";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const { t } = useI18n();
-  const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
@@ -36,15 +28,11 @@ export default function RootLayout() {
   }
 
   return (
-    <ReduxProvider>
-      <Text>{t("login.username")}</Text>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
+    <SafeAreaProvider>
+      <ReduxProvider>
         <StatusBar style="auto" />
-      </ThemeProvider>
-    </ReduxProvider>
+        <Slot />
+      </ReduxProvider>
+    </SafeAreaProvider>
   );
 }

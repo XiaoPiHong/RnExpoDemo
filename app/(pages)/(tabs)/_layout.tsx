@@ -1,4 +1,4 @@
-import { Tabs } from "expo-router";
+import { Tabs, Redirect } from "expo-router";
 import React from "react";
 import { Platform } from "react-native";
 import { useSelector } from "react-redux";
@@ -8,12 +8,17 @@ import { IconSymbol } from "@/components/ui/IconSymbol";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import * as storageUtils from "@/utils/storage";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const user = useSelector((state: TRootState) => state.user);
-  console.log(user);
+
+  if (!user.accessToken) {
+    // On web, static rendering will stop here as the user is not authenticated
+    // in the headless Node process that the pages are rendered in.
+    return <Redirect href="/login" />;
+  }
+
   return (
     <Tabs
       screenOptions={{
