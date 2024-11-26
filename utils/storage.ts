@@ -1,15 +1,15 @@
-import * as SecureStore from "expo-secure-store"; // @expo/secure-store 值最大存储2048字节
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const appStorage = {
   setItem: (key, value) => {
-    return SecureStore.setItemAsync(key, value);
+    return AsyncStorage.setItem(key, value);
   },
 
   getItem: (key) => {
-    return SecureStore.getItemAsync(key);
+    return AsyncStorage.getItem(key);
   },
   removeItem: (key) => {
-    return SecureStore.deleteItemAsync(key);
+    return AsyncStorage.removeItem(key);
   },
 };
 
