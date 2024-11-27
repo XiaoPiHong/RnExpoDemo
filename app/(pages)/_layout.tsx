@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Stack } from "expo-router";
 import { useSelector } from "react-redux";
 import { TRootState } from "@/store/store";
+import { StatusBar } from "expo-status-bar";
 
 const PageLayout = () => {
   const insets = useSafeAreaInsets();
@@ -21,6 +22,7 @@ const PageLayout = () => {
         },
       ]}
     >
+      <StatusBar style="auto" />
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="login" />
         <Stack.Screen name="(tabs)" />

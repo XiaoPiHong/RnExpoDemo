@@ -2,7 +2,6 @@
 import { useFonts } from "expo-font";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import * as SplashScreen from "expo-splash-screen";
-import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import ReduxProvider from "@/store";
@@ -30,7 +29,6 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <ReduxProvider>
-        <StatusBar style="auto" />
         <Slot />
       </ReduxProvider>
     </SafeAreaProvider>

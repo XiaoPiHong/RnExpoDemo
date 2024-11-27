@@ -3,7 +3,7 @@
     "name": "RnExpoDemo",
     "slug": "RnExpoDemo",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default", // 默认支持横竖屏
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",

@@ -3,7 +3,7 @@ import * as apisOauth from "@/apis/oauth/oauth";
 
 const initialState = {
   username: "",
-  accessToken: "token",
+  accessToken: "",
   refreshToken: "",
   tokenType: "",
 };

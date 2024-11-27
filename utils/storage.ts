@@ -1,9 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // 防止上次数据残留
-// if (__DEV__) {
-//   AsyncStorage.clear();
-// }
+if (__DEV__) {
+  AsyncStorage.clear();
+}
 
 export const appStorage = {
   setItem: (key, value) => {
