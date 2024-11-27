@@ -4,7 +4,7 @@ import * as envUtil from "@/utils/env";
 import { useUserState, TAppDispatch } from "@/store/store";
 import { postRefreshToken } from "@/store/slices/userSlice";
 import { useDispatch } from "react-redux";
-// import useToast from "@/hooks/useToast";
+import useToast from "@/hooks/useToast";
 
 const { EXPO_PUBLIC_BASE_API_URL, EXPO_PUBLIC_SERVER_URL } =
   envUtil.getEnvConfig();
@@ -135,8 +135,8 @@ function request(options: IRequestOptions) {
         return Promise.reject(new Error("未知错误"));
       })
       .catch((error) => {
-        // const { toast } = useToast();
-        // toast.error(`${error.message}${SERVER_URL}`);
+        const { toast } = useToast();
+        toast.error(`${error.message}${EXPO_PUBLIC_SERVER_URL}`);
         console.log(error.message);
         return Promise.reject(error);
       });

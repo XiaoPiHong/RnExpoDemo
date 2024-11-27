@@ -9,42 +9,47 @@ import {
   ScrollView,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
-// import useToast from "@/hooks/useToast";
+import useToast from "@/hooks/useToast";
 import { useDispatch } from "react-redux";
 import { updateTokenConfig } from "@/store/slices/userSlice";
-// import { stringMd5 } from "react-native-quick-md5";
 import * as apisAuth from "@/apis/auth/auth";
-// import * as randomUtil from "@/utils/random";
+import * as randomUtil from "@/utils/random";
 import useI18n from "@/hooks/useI18n";
+import * as Crypto from "expo-crypto";
 
 export default function LoginScreen() {
   const [username, setUserName] = useState("xph-admin");
   const [password, setPassword] = useState("Admin@1234");
   const { t } = useI18n();
-  // const { toast } = useToast();
+  const { toast } = useToast();
   const dispatch = useDispatch();
 
-  const onClickLoginBtn = () => {
-    // if (!username || !password) {
-    //   return toast.info(`${t("login.tips.usernameAndPasswordNotNull")}`);
-    // }
-    // const timestamp = Date.now().toString();
-    // const nonceStr = randomUtil.generateRandomString(16);
-    // const signature = stringMd5(
-    //   `${nonceStr}${timestamp}${stringMd5(password)}`
-    // );
-    // apisAuth
-    //   .postSignInByUsername({
-    //     username,
-    //     nonceStr,
-    //     timestamp,
-    //     signature,
-    //     clientId: "sso-admin",
-    //   })
-    //   .then((res) => {
-    //     const { data } = res;
-    //     dispatch(updateTokenConfig(data));
-    //   });
+  const onClickLoginBtn = async () => {
+    if (!username || !password) {
+      return toast.info(`${t("login.tips.usernameAndPasswordNotNull")}`);
+    }
+    const timestamp = Date.now().toString();
+    const nonceStr = await randomUtil.generateRandomString(16);
+    const md5Password = await Crypto.digestStringAsync(
+      Crypto.CryptoDigestAlgorithm.MD5,
+      password
+    );
+    const signature = await Crypto.digestStringAsync(
+      Crypto.CryptoDigestAlgorithm.MD5,
+      `${nonceStr}${timestamp}${md5Password}`
+    );
+    apisAuth
+      .postSignInByUsername({
+        username,
+        nonceStr,
+        timestamp,
+        signature,
+        clientId: "sso-admin",
+      })
+      .then((res) => {
+        const { data } = res;
+        dispatch(updateTokenConfig(data));
+      });
   };
 
   return (

@@ -7,6 +7,7 @@ import "react-native-reanimated";
 import ReduxProvider from "@/store";
 import ThemeProvider from "@/context/useThemeContext";
 import { Slot } from "expo-router";
+import Toast from "react-native-toast-message";
 import "@/i18n";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -32,6 +33,7 @@ export default function RootLayout() {
       <ReduxProvider>
         <ThemeProvider>
           <Slot />
+          <Toast />
         </ThemeProvider>
       </ReduxProvider>
     </SafeAreaProvider>
