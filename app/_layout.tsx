@@ -5,6 +5,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import ReduxProvider from "@/store";
+import ThemeProvider from "@/context/useThemeContext";
 import { Slot } from "expo-router";
 import "@/i18n";
 
@@ -29,7 +30,9 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <ReduxProvider>
-        <Slot />
+        <ThemeProvider>
+          <Slot />
+        </ThemeProvider>
       </ReduxProvider>
     </SafeAreaProvider>
   );
