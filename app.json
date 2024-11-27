@@ -3,7 +3,7 @@
     "name": "RnExpoDemo",
     "slug": "RnExpoDemo",
     "version": "1.0.0",
-    "orientation": "default", // 默认支持横竖屏
+    "orientation": "default",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
@@ -44,7 +44,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "bc214b15-ba72-420d-ae31-e6b2cda1e076"
+        "projectId": "a539882a-c40a-420b-9c60-fb3c0e083ff8"
       }
     }
   }
