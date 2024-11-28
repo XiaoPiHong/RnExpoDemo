@@ -2,9 +2,10 @@ import qs from "qs";
 import * as _ from "lodash-es";
 import * as envUtil from "@/utils/env";
 import { useUserState, TAppDispatch } from "@/store/store";
-import { postRefreshToken } from "@/store/slices/userSlice";
+import { clearTokenConfig, updateTokenConfig } from "@/store/slices/userSlice";
 import { useDispatch } from "react-redux";
 import useToast from "@/hooks/useToast";
+import * as apisOauth from "@/apis/oauth/oauth";
 
 const { EXPO_PUBLIC_BASE_API_URL, EXPO_PUBLIC_SERVER_URL } =
   envUtil.getEnvConfig();
@@ -111,15 +112,20 @@ function request(options: IRequestOptions) {
                 case 401: {
                   const dispatch = useDispatch<TAppDispatch>();
 
-                  return dispatch(
-                    postRefreshToken({
+                  return apisOauth
+                    .postOauthToken({
                       grant_type: "refresh_token",
                       client_id: "sso-admin",
                       refresh_token: userState.refreshToken,
                     })
-                  ).then(() => {
-                    return startRequest();
-                  });
+                    .then((tokenRes) => {
+                      const { data: tokenConfig } = tokenRes;
+                      dispatch(updateTokenConfig(tokenConfig));
+                      return startRequest();
+                    })
+                    .catch(() => {
+                      dispatch(clearTokenConfig());
+                    });
                 }
                 default:
                   return Promise.reject(new Error(body.message));

@@ -1,5 +1,10 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import * as apisOauth from "@/apis/oauth/oauth";
+import {
+  createSlice,
+  // createAsyncThunk
+} from "@reduxjs/toolkit";
+
+// 由于刷新token比较特殊，需要在request中使用，而request又依赖于store/store.ts，所以此处不能使用，否者会造成循环依赖
+// import * as apisOauth from "@/apis/oauth/oauth";
 
 const initialState = {
   username: "",
@@ -8,15 +13,15 @@ const initialState = {
   tokenType: "",
 };
 
-/** 异步操作 */
-export const postRefreshToken = createAsyncThunk(
-  // 只是一个标识
-  "user/postRefreshToken",
-  async (params: any, thunkAPI) => {
-    // const {dispatch} = thunkAPI;
-    return apisOauth.postOauthToken(params);
-  }
-);
+// /** 异步操作 */
+// export const postRefreshToken = createAsyncThunk(
+//   // 只是一个标识
+//   "user/postRefreshToken",
+//   async (params: any, thunkAPI) => {
+//     // const {dispatch} = thunkAPI;
+//     return apisOauth.postOauthToken(params);
+//   }
+// );
 
 const userSlice = createSlice({
   name: "user",
@@ -31,6 +36,11 @@ const userSlice = createSlice({
       state.refreshToken = refresh_token;
       state.tokenType = token_type;
     },
+    clearTokenConfig(state) {
+      state.accessToken = "";
+      state.refreshToken = "";
+      state.tokenType = "";
+    },
     clearUser() {
       return initialState;
     },
@@ -41,14 +51,14 @@ const userSlice = createSlice({
     //   state.refreshToken = action.payload.refreshToken;
     //   state.tokenType = action.payload.tokenType;
     // });
-    /** 失败则清除token */
-    builder.addCase(postRefreshToken.rejected, (state) => {
-      state.accessToken = "";
-      state.refreshToken = "";
-      state.tokenType = "";
-    });
+    // builder.addCase(postRefreshToken.rejected, (state) => {
+    //   state.accessToken = "";
+    //   state.refreshToken = "";
+    //   state.tokenType = "";
+    // });
   },
 });
 
-export const { updateTokenConfig, clearUser } = userSlice.actions;
+export const { updateTokenConfig, clearUser, clearTokenConfig } =
+  userSlice.actions;
 export default userSlice.reducer;
