@@ -12,7 +12,8 @@
     "lint": "expo lint",
     "android:expogo": "expo start --android",
     "ios:expogo": "expo start --ios",
-    "build:android": "eas build --platform android --profile release",
+    "build:android:dev": "eas build --platform android --profile development",
+    "build:android:testing": "eas build --platform android --profile testing",
     "build:android:prod": "eas build --platform android --profile production"
   },
   "jest": {
