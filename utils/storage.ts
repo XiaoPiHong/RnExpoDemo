@@ -1,22 +1,51 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Platform } from "react-native";
 
-// 防止上次数据残留
-if (__DEV__) {
-  AsyncStorage.clear();
-}
-
+/** AsyncStorage在Web端初始化时候获取不到window，此处兼容一下 */
 export const appStorage = {
-  setItem: (key, value) => {
+  setItem: async (key, value) => {
+    if (Platform.OS === "web") {
+      if (typeof localStorage === "undefined") {
+        return null;
+      }
+      return localStorage.setItem(key, value);
+    }
     return AsyncStorage.setItem(key, value);
   },
 
-  getItem: (key) => {
+  getItem: async (key) => {
+    if (Platform.OS === "web") {
+      if (typeof localStorage === "undefined") {
+        return null;
+      }
+      return localStorage.getItem(key);
+    }
     return AsyncStorage.getItem(key);
   },
-  removeItem: (key) => {
+  removeItem: async (key) => {
+    if (Platform.OS === "web") {
+      if (typeof localStorage === "undefined") {
+        return null;
+      }
+      return localStorage.removeItem(key);
+    }
     return AsyncStorage.removeItem(key);
   },
+  clear: async () => {
+    if (Platform.OS === "web") {
+      if (typeof localStorage === "undefined") {
+        return null;
+      }
+      return localStorage.clear();
+    }
+    return AsyncStorage.clear();
+  },
 };
+
+// 防止上次数据残留
+if (__DEV__) {
+  appStorage.clear();
+}
 
 /**
  * 过滤器类型 Enum

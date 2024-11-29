@@ -51,8 +51,9 @@ i18next
  * 获取当前系统语言
  * @returns {string}
  */
-export const getSystemLanguage = (): string => {
+export const getSystemLanguage = (): string | null => {
   const locales = Localization.getLocales();
-  return locales[0].languageCode!;
+  console.log(locales);
+  return locales[0]?.languageCode || null;
 };
 export default i18next;

@@ -1,4 +1,5 @@
-/** 该文件可看作App.tsx */
+/** as App.tsx */
+import "@/i18n";
 import { useFonts } from "expo-font";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import * as SplashScreen from "expo-splash-screen";
@@ -8,7 +9,6 @@ import ReduxProvider from "@/store";
 import ThemeProvider from "@/context/useThemeContext";
 import { Slot } from "expo-router";
 import Toast from "react-native-toast-message";
-import "@/i18n";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();

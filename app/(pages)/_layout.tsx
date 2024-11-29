@@ -2,14 +2,11 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Stack } from "expo-router";
-import { useSelector } from "react-redux";
-import { TRootState } from "@/store/store";
 import { StatusBar } from "expo-status-bar";
 
 const PageLayout = () => {
   const insets = useSafeAreaInsets();
-  const user = useSelector((state: TRootState) => state.user);
-  console.log(user);
+
   return (
     <View
       style={[

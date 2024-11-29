@@ -79,9 +79,9 @@ function request(options: IRequestOptions) {
         body = qs.stringify(data); // 自动将 object 转 FormData
         break;
     }
-    console.log(EXPO_PUBLIC_BASE_API_URL);
+    console.log(EXPO_PUBLIC_SERVER_URL);
     return fetch(
-      `${EXPO_PUBLIC_BASE_API_URL}${EXPO_PUBLIC_SERVER_URL}${url}${
+      `${EXPO_PUBLIC_SERVER_URL}${EXPO_PUBLIC_BASE_API_URL}${url}${
         query ? `?${qs.stringify(query)}` : ""
       }`,
       {

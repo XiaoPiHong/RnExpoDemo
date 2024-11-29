@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  Platform,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import useToast from "@/hooks/useToast";
@@ -16,6 +17,8 @@ import * as apisAuth from "@/apis/auth/auth";
 import * as randomUtil from "@/utils/random";
 import useI18n from "@/hooks/useI18n";
 import * as Crypto from "expo-crypto";
+import { stringMd5 } from "react-native-quick-md5";
+import { router } from "expo-router";
 
 export default function LoginScreen() {
   const [username, setUserName] = useState("xph-admin");
@@ -28,16 +31,35 @@ export default function LoginScreen() {
     if (!username || !password) {
       return toast.info(`${t("login.tips.usernameAndPasswordNotNull")}`);
     }
-    const timestamp = Date.now().toString();
-    const nonceStr = await randomUtil.generateRandomString(16);
-    const md5Password = await Crypto.digestStringAsync(
-      Crypto.CryptoDigestAlgorithm.MD5,
-      password
-    );
-    const signature = await Crypto.digestStringAsync(
-      Crypto.CryptoDigestAlgorithm.MD5,
-      `${nonceStr}${timestamp}${md5Password}`
-    );
+    let nonceStr = "";
+    let timestamp = "";
+    let signature = "";
+    let md5Password = "";
+    /** Crypto的在web端需要https，此处用不同的库兼容http的情况 */
+    if (Platform.OS === "web") {
+      timestamp = Date.now().toString();
+      nonceStr = await randomUtil.generateRandomString(16);
+      md5Password = stringMd5(password);
+      signature = stringMd5(`${nonceStr}${timestamp}${md5Password}`);
+    } else {
+      timestamp = Date.now().toString();
+      nonceStr = await randomUtil.generateRandomString(16);
+      md5Password = await Crypto.digestStringAsync(
+        Crypto.CryptoDigestAlgorithm.MD5,
+        password
+      );
+      signature = await Crypto.digestStringAsync(
+        Crypto.CryptoDigestAlgorithm.MD5,
+        `${nonceStr}${timestamp}${md5Password}`
+      );
+    }
+    console.log({
+      username,
+      nonceStr,
+      timestamp,
+      signature,
+      clientId: "sso-admin",
+    });
     apisAuth
       .postSignInByUsername({
         username,
@@ -49,6 +71,7 @@ export default function LoginScreen() {
       .then((res) => {
         const { data } = res;
         dispatch(updateTokenConfig(data));
+        router.replace("/explore");
       });
   };
 
