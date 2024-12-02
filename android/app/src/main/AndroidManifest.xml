@@ -26,6 +26,7 @@
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="myapp"/>
         <data android:scheme="com.xiaopihong.RnExpoDemo"/>
+        <data android:scheme="exp+rnexpodemo"/>
       </intent-filter>
     </activity>
   </application>
