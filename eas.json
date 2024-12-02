@@ -8,21 +8,24 @@
       "developmentClient": true,
       "distribution": "internal",
       "ios": {},
-      "android": {}
+      "android": {},
+      "environment": "development"
     },
-    "testing": {
+    "preview": {
       "distribution": "internal",
       "ios": {},
       "android": {
         "buildType": "apk"
-      }
+      },
+      "environment": "preview"
     },
     "production": {
       "autoIncrement": true,
       "ios": {},
       "android": {
         "buildType": "apk"
-      }
+      },
+      "environment": "production"
     }
   },
   "submit": {

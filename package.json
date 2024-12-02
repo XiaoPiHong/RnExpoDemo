@@ -13,11 +13,12 @@
     "android:expogo": "expo start --android",
     "ios:expogo": "expo start --ios",
     "build:android:dev": "eas build --platform android --profile development",
-    "build:android:testing": "eas build --platform android --profile testing",
+    "build:android:pre": "eas build --platform android --profile preview",
     "build:android:prod": "eas build --platform android --profile production",
     "build:ios:dev": "eas build --platform ios --profile development",
-    "build:ios:testing": "eas build --platform ios --profile testing",
-    "build:ios:prod": "eas build --platform ios --profile production"
+    "build:ios:pre": "eas build --platform ios --profile preview",
+    "build:ios:prod": "eas build --platform ios --profile production",
+    "build:web:dev": "npx expo export --platform web --clear"
   },
   "jest": {
     "preset": "jest-expo"
