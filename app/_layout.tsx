@@ -9,6 +9,7 @@ import ReduxProvider from "@/store";
 import ThemeProvider from "@/context/useThemeContext";
 import { Slot } from "expo-router";
 import Toast from "react-native-toast-message";
+import NoInternet, { NoInternetToast } from "@/components/NoInternet";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -33,6 +34,7 @@ export default function RootLayout() {
       <ReduxProvider>
         <ThemeProvider>
           <Slot />
+          <NoInternet />
           <Toast />
         </ThemeProvider>
       </ReduxProvider>
