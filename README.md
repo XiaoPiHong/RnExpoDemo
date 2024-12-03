@@ -1,50 +1,63 @@
-# Welcome to your Expo app 👋
+1、注册 expo 账号
+https://expo.dev/
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+2、全局安装
+npm i -g eas-cli expo-cli（expo-cli 用于开发，eas-cli 用于推送云打包）（旧版本的 expo 也是用 expo-cli 创建项目的）
 
-## Get started
+3、新版的 expo 不用使用脚手架创建项目，直接使用命令创建项目
+旧版（基于 expo-cli 创建）：yarn create expo-app
+新版（expo 51 直接命令创建）：npx create-expo-app@latest
 
-1. Install dependencies
+4、手机下载 Expo go 并登录之前注册的账号
+安卓手机可以到谷歌市场下载 Expo go，但是不知道为什么，下载的速度太慢了。所以我这里提供网页端下载。 https://expo.dev/go选择最新版下载安装就行了
 
-   ```bash
-   npm install
-   ```
+5、本地 eas-cli 登录
+npx eas login
+输入账号密码登录
 
-2. Start the app
+6、安装依赖运行 Metro 使用 expo go 调试
+yarn start
 
-   ```bash
-    npx expo start
-   ```
+同 wifi 环境上使用 expo go 扫描终端中的二维码进行 expo go 调试
 
-In the output, you'll find options to open the app in a
+或者通过终端的快捷键在 expo go 中进行调试
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+7、原生调试（原生调试需要原生开发环境）
+npx expo run:ios
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+npx expo run:android
 
-## Get a fresh project
+使用 npx expo prebuild 进行预构建会生成原生 android / ios 目录，原生目录是用来原生调试使用的，在 window 系统下进行预构建无法生成 ios 原生目录（iOS 项目依赖 Xcode，Xcode 是 macOS 上的开发工具，用于处理 iOS 应用的构建、签名和发布。在 Windows 系统上，缺少 Xcode，因此无法生成和管理 iOS 项目）
 
-When you're ready, run:
+8、安装第三方依赖注意事项
+安装第三方依赖如果依赖涉及到原生交互，最好使用 npx expo install xxx（如：npx expo install react-native-mmkv），因为使用 expo install xxx 会确保安装与当前 Expo SDK 兼容的依赖版本（坑：有很多依赖是不能在 expo go 中启动的，比如 react-native-mmkv，所以如果使用依赖之后报错要看下其社区是不是不支持 expo go 中运行）
 
-```bash
-npm run reset-project
-```
+9、expo-dev-client 调试
+原生模块（Native Modules）需要与应用程序的原生代码部分（如 iOS 的 Objective-C/Swift 和 Android 的 Java/Kotlin）进行链接。这意味着：1、当你在 React Native 项目中使用自定义的原生包时，必须通过工具（如 react-native link 或自动链接）将原生代码集成到应用的构建流程中。2、然而，Expo Go 是一个预编译的应用程序，无法动态加载新的原生模块。
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+安装 expo-dev-client 依赖：npx expo install expo-dev-client
 
-## Learn more
+配置 eas.json 的 build.development.developmentClient 属性为 true
 
-To learn more about developing your project with Expo, look at the following resources:
+打包开发 apk： npx eas build --platform android --profile development
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+到 expo 的 eas 工作流中使用 expo go 或者直接下载开发 apk
 
-## Join the community
+yarn start 启动项目后打开下载的开发 apk，应用就会自动连接上本地项目上，就可以进行开发调试了（前提是在同一网络环境下）
 
-Join our community of developers creating universal apps.
+使用 expo go 进行开发调试缺点就是只能使用 Expo SDK 中预先集成的模块和一些符合 Expo 工作流的第三方包。Expo Go 是一个专门为快速开发和原型制作而设计的客户端，它预先包含了常用的原生模块，但不支持使用未包含的原生模块，但是 expo-dev-client 解决了不能使用的一些 react-native 原生包的问题，但是前提是预先把这些包安装到 package.json 中，使用 eas 进行开发 apk 的打包，再将开发 apk 下载到设备上，这样 react-native 原生包才能正常使用
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+三种开发调试方式的区别：
+| 调试方式 | 是否能使用原生包 | 是否需要原生环境 | 是否需要使用 expo go 应用 |
+| --------- | --------- | ---------------- | ------------------------- |
+| 原生开发调试 | 是 | 是 | 否 |
+| expo go 开发调试 | 否 | 否 | 是 |
+| expo-dev-client 开发调试 | 否 | 否 | 否 |
+
+10、打包配置
+由于打包是使用 eas 云打包，所以需要在 expo 管理的项目上增加不同环境的环境变量：
+
+目前区分三个环境：
+development（开发环境，打包开发 apk 时读取）
+preview（预览环境，充当测试环境使用）
+production（生产环境，打包正式上线包使用）
