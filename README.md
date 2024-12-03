@@ -68,14 +68,16 @@ yarn start 启动项目后打开下载的开发 apk，应用就会自动连接�
 
 10、打包配置
 
-由于打包是使用 eas 云打包，所以需要在 expo 账号环境变量中增加不同环境的环境变量：
+由于打包 ios 和 android 是使用 eas 云打包，所以需要在 expo 账号环境变量中增加不同环境的环境变量：
 
 目前区分三个环境：
 
-development（开发环境，打包开发 apk 时读取）
+1、development（开发环境，打包开发 apk 时读取）
 
-preview（预览环境，充当测试环境使用）
+2、preview（预览环境，充当测试环境使用）
 
-production（生产环境，打包正式上线包使用）
+3、production（生产环境，打包正式上线包使用）
+
+web 打包无需使用 eas 云打包，所以是读取本地的.env 配置文件，打包命令读取不同的配置文件（这里要悉知 .env 配置文件加载优先级）
 
 环境变量的读取有坑：（每个环境变量都必须使用 JavaScript 的点表示法静态引用为 process.env 的属性，才能内联。例如，表达式 process.env.EXPO_PUBLIC_KEY 有效并且将被内联；不支持表达式的替代版本。例如，process.env[\'EXPO_PUBLIC_KEY\'] 或 const {EXPO_PUBLIC_X} = process.env 无效，不会被内联）
