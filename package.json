@@ -18,7 +18,9 @@
     "build:ios:dev": "eas build --platform ios --profile development",
     "build:ios:pre": "eas build --platform ios --profile preview",
     "build:ios:prod": "eas build --platform ios --profile production",
-    "build:web:dev": "npx expo export --platform web --clear"
+    "build:web:dev": "expo export --platform web --clear",
+    "build:web:pre": "expo export --platform web --clear",
+    "build:web:prod": "expo export --platform web --clear"
   },
   "jest": {
     "preset": "jest-expo"
