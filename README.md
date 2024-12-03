@@ -14,7 +14,7 @@ npm i -g eas-cli expo-cli（expo-cli 用于开发，eas-cli 用于推送云打�
 
 4、手机下载 Expo go 并登录之前注册的账号
 
-安卓手机可以到谷歌市场下载 Expo go，但是不知道为什么，下载的速度太慢了。所以我这里提供网页端下载。 https://expo.dev/go选择最新版下载安装就行了
+安卓手机可以到谷歌市场下载 Expo go，但是不知道为什么，下载的速度太慢了。所以我这里提供网页端下载。 https://expo.dev/go 选择最新版下载安装就行了
 
 5、本地 eas-cli 登录
 
