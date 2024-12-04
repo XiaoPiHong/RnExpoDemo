@@ -50,13 +50,13 @@ npx expo run:android
 
 配置 eas.json 的 build.development.developmentClient 属性为 true
 
-打包开发 apk： npx eas build --platform android --profile development
+打包开发 app： npx eas build --platform android --profile development
 
-到 expo 的 eas 工作流中使用 expo go 或者直接下载开发 apk
+到 expo 的 eas 工作流中使用 expo go 或者直接下载开发 app
 
-yarn start 启动项目后打开下载的开发 apk，应用就会自动连接上本地项目上，就可以进行开发调试了（前提是在同一网络环境下）
+yarn start 启动项目后打开下载的开发 app，应用就会自动连接上本地项目上，就可以进行开发调试了（前提是在同一网络环境下）
 
-使用 expo go 进行开发调试缺点就是只能使用 Expo SDK 中预先集成的模块和一些符合 Expo 工作流的第三方包。Expo Go 是一个专门为快速开发和原型制作而设计的客户端，它预先包含了常用的原生模块，但不支持使用未包含的原生模块，但是 expo-dev-client 解决了不能使用的一些 react-native 原生包的问题，但是前提是预先把这些包安装到 package.json 中，使用 eas 进行开发 apk 的打包，再将开发 apk 下载到设备上，这样 react-native 原生包才能正常使用
+使用 expo go 进行开发调试缺点就是只能使用 Expo SDK 中预先集成的模块和一些符合 Expo 工作流的第三方包。Expo Go 是一个专门为快速开发和原型制作而设计的客户端，它预先包含了常用的原生模块，但不支持使用未包含的原生模块，但是 expo-dev-client 解决了不能使用的一些 react-native 原生包的问题，但是前提是预先把这些包安装到 package.json 中，使用 eas 进行开发 app 的打包，再将开发 app 下载到设备上，这样 react-native 原生包才能正常使用
 
 三种开发调试方式的区别：
 
@@ -72,7 +72,7 @@ yarn start 启动项目后打开下载的开发 apk，应用就会自动连接�
 
 目前区分三个环境：
 
-1、development（开发环境，打包开发 apk 时读取）
+1、development（开发环境，打包开发 app 时读取）
 
 2、preview（预览环境，充当测试环境使用）
 
@@ -81,3 +81,99 @@ yarn start 启动项目后打开下载的开发 apk，应用就会自动连接�
 web 打包无需使用 eas 云打包，所以是读取本地的.env 配置文件，打包命令读取不同的配置文件（这里要悉知 .env 配置文件加载优先级）
 
 环境变量的读取有坑：（每个环境变量都必须使用 JavaScript 的点表示法静态引用为 process.env 的属性，才能内联。例如，表达式 process.env.EXPO_PUBLIC_KEY 有效并且将被内联；不支持表达式的替代版本。例如，process.env[\'EXPO_PUBLIC_KEY\'] 或 const {EXPO_PUBLIC_X} = process.env 无效，不会被内联）
+
+11、理解版本号
+
+# Expo 应用版本管理指南
+
+在 Expo 项目中，`version` 和平台特定的 `android.versionCode` 与 `ios.buildNumber` 都是用于管理应用程序版本的，但它们的用途和定义有所不同：
+
+---
+
+## **1. `version` (通用版本号)**
+
+- **用途**: 表示应用程序的通用版本号，通常是用户可见的。
+- **格式**: 通常是 `major.minor.patch` 的形式，例如 `1.0.0`。
+- **显示位置**: 这个版本号会显示在应用商店中（如 App Store 或 Google Play），让用户知道应用的版本。
+- **修改时机**:
+  - 当有新功能或显著更新时，可以增加主版本号。
+  - 当进行小的功能改动时，可以增加次版本号。
+  - 当修复了小问题或 bug 时，可以增加补丁号。
+- **配置路径**: `app.json` 或 `app.config.js` 中。
+
+```json
+{
+  "expo": {
+    "version": "1.0.0"
+  }
+}
+```
+
+---
+
+## **2. `android.versionCode` (Android 专用内部版本号)**
+
+- **用途**:
+  - 用于标识 Android 应用的唯一版本。
+  - 应用商店通过 `versionCode` 判断版本是否比之前发布的版本更新。
+- **格式**: 必须是一个 **递增的整数**，例如 `1`, `2`, `3`。
+- **重要点**:
+  - 不能重复或降低，必须每次发布新版本时增加。
+  - 不直接展示给用户，主要用于内部管理。
+- **配置路径**:
+
+```json
+{
+  "expo": {
+    "android": {
+      "versionCode": 1
+    }
+  }
+}
+```
+
+---
+
+## **3. `ios.buildNumber` (iOS 专用内部构建编号)**
+
+- **用途**:
+  - 用于标识 iOS 应用的唯一构建。
+  - App Store Connect 会通过 `buildNumber` 来判断是否是一个新版本。
+- **格式**: 通常是字符串，通常用整数表示，例如 `1`, `2`, `3`。
+- **重要点**:
+  - 必须每次发布新版本时递增。
+  - 不直接展示给用户，主要用于内部管理。
+- **配置路径**:
+
+```json
+{
+  "expo": {
+    "ios": {
+      "buildNumber": "1"
+    }
+  }
+}
+```
+
+---
+
+## **总结: 主要区别**
+
+| 属性                  | 平台    | 用途                                    | 格式        | 是否用户可见 |
+| --------------------- | ------- | --------------------------------------- | ----------- | ------------ |
+| `version`             | 通用    | 标识用户可见的应用版本                  | `1.0.0`     | 是           |
+| `android.versionCode` | Android | 标识应用在 Google Play 的内部版本号     | 整数        | 否           |
+| `ios.buildNumber`     | iOS     | 标识应用在 App Store Connect 的内部构建 | 字符串/整数 | 否           |
+
+---
+
+## **建议使用规范**
+
+1. 每次发布新版本：
+   - 增加 `version`，同时更新用户可见的版本号。
+   - **确保** `android.versionCode` 和 `ios.buildNumber` 都递增。
+2. 使用脚本或自动化工具（如 GitHub Actions）来管理版本号变化。
+
+12、版本检测（待实现）
+
+13、增量更新（待实现）
