@@ -19,6 +19,7 @@ import useI18n from "@/hooks/useI18n";
 import * as Crypto from "expo-crypto";
 import { stringMd5 } from "react-native-quick-md5";
 import { router } from "expo-router";
+import * as Application from "expo-application";
 
 export default function LoginScreen() {
   const [username, setUserName] = useState("xph-admin");
@@ -28,6 +29,8 @@ export default function LoginScreen() {
   const dispatch = useDispatch();
 
   const onClickLoginBtn = async () => {
+    console.log(Application.nativeApplicationVersion);
+    console.log(Application.nativeBuildVersion);
     if (!username || !password) {
       return toast.info(`${t("login.tips.usernameAndPasswordNotNull")}`);
     }
