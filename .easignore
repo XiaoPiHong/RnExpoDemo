@@ -1,0 +1,36 @@
+# 忽略 node_modules 文件夹
+node_modules/
+
+# 忽略 Expo 构建缓存
+.expo/
+.expo-shared/
+
+# 忽略打包后的产物
+build/
+dist/
+
+# 忽略 iOS 和 Android 的构建文件夹
+ios/
+android/
+
+# 忽略日志文件
+_.log
+_.tlog
+
+# 忽略本地开发工具的配置
+.vscode/
+.idea/
+
+# 忽略 macOS 系统文件
+.DS_Store
+
+# 忽略 Windows 系统文件
+Thumbs.db
+
+# 如果你使用了某些临时或自动生成的文件夹，可能也需要忽略
+_.tmp
+_.bak
+\*.swp
+
+# Ignore test coverage reports
+/coverage

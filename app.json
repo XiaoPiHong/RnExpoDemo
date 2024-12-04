@@ -10,7 +10,12 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.xiaopihong.RnExpoDemo"
+      "bundleIdentifier": "com.xiaopihong.RnExpoDemo",
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        }
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -35,7 +40,16 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      "expo-localization"
+      "expo-localization",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          },
+          "ios": {}
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
@@ -45,7 +59,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "a539882a-c40a-420b-9c60-fb3c0e083ff8"
+        "projectId": "8471d03c-f59b-4578-803b-224271dd4718"
       }
     }
   }
