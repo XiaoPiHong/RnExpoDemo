@@ -1,7 +1,23 @@
 import * as FileSystem from "expo-file-system";
 import useToast from "@/hooks/useToast";
+import Big from "big.js";
 
 const { toast } = useToast();
+
+const deleteFile = async (fileName) => {
+  try {
+    const fileUri = FileSystem.documentDirectory + fileName;
+    const fileInfo = await FileSystem.getInfoAsync(fileUri);
+    if (fileInfo.exists) {
+      await FileSystem.deleteAsync(fileUri);
+      console.log("File deleted successfully.");
+    } else {
+      console.log("File does not exist.");
+    }
+  } catch (error) {
+    console.error("Error deleting file:", error);
+  }
+};
 
 const downloadFile = async (url, fileName, setProgress) => {
   try {
@@ -38,20 +54,31 @@ const downloadFile = async (url, fileName, setProgress) => {
       (downloadProgress) => {
         const { totalBytesWritten } = downloadProgress;
 
-        // 确保 totalSize 合法，避免除零错误
-        if (totalSize > 0) {
-          // 计算进度值
-          const progress = (totalBytesWritten + downloadedSize) / totalSize;
+        try {
+          // 检查 totalSize 的合法性
+          if (totalSize <= 0) {
+            console.warn("Invalid totalSize value:", totalSize);
+            setProgress(0);
+            return;
+          }
 
-          // 限制范围并保留两位小数
-          const clampedProgress = Math.min(Math.max(progress, 0), 1); // 确保在 [0, 1]
-          const roundedProgress = Math.round(clampedProgress * 100) / 100; // 保留两位小数
+          // 使用 Big.js 计算进度值
+          const totalWritten = Big(totalBytesWritten).plus(downloadedSize); // 精确加法
+          const total = Big(totalSize); // 转换为高精度对象
+          const progress = totalWritten.div(total); // 精确除法
 
-          console.log(`Progress: ${roundedProgress}`);
-          setProgress(roundedProgress);
-        } else {
-          console.error("Invalid totalSize value:", totalSize);
-          setProgress(0);
+          // 限制进度范围到 [0, 1]
+          const clampedProgress = progress.lt(0)
+            ? new Big(0)
+            : progress.gt(1)
+            ? new Big(1)
+            : progress;
+
+          // 设置进度
+          setProgress(clampedProgress.toNumber()); // 转换为普通数字并设置进度
+        } catch (error) {
+          console.error("Error during progress calculation:", error);
+          setProgress(0); // 出现错误时将进度设置为 0
         }
       }
     );
@@ -69,4 +96,4 @@ const downloadFile = async (url, fileName, setProgress) => {
   }
 };
 
-export { downloadFile };
+export { downloadFile, deleteFile };

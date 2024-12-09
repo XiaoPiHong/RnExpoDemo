@@ -4,9 +4,11 @@ import { useState, useEffect } from "react";
 import * as Application from "expo-application";
 import * as downloadlUtil from "@/utils/download";
 import { ProgressBar } from "react-native-paper";
+import { useTheme } from "@/context/useThemeContext";
 
 /** ios全包更新需要引导用户到App Store；android全包更新可直接下载安装包 */
 const UpdateCheck = () => {
+  const { theme } = useTheme();
   const insets = useSafeAreaInsets();
   // [0,1]
   const [progress, setProgress] = useState(0);
@@ -47,12 +49,16 @@ const UpdateCheck = () => {
         versionCode !== newVersionInfo.android.versionName ||
         versionName !== newVersionInfo.android.versionCode
       ) {
-        downloadlUtil.downloadFile(
-          newVersionInfo.android.apkUrl,
-          `${newVersionInfo.android.apkUrl.split("/").pop()}`,
-          setProgress
-        );
-        setVisible(true);
+        downloadlUtil
+          .deleteFile(`${newVersionInfo.android.apkUrl.split("/").pop()}`)
+          .then(() => {
+            downloadlUtil.downloadFile(
+              newVersionInfo.android.apkUrl,
+              `${newVersionInfo.android.apkUrl.split("/").pop()}`,
+              setProgress
+            );
+            setVisible(true);
+          });
       }
     }
     // }
@@ -60,7 +66,7 @@ const UpdateCheck = () => {
   return (
     <View
       style={[
-        styles.container,
+        styles.layout,
         {
           top: insets.top,
           left: insets.left,
@@ -70,19 +76,29 @@ const UpdateCheck = () => {
         },
       ]}
     >
-      <Text style={{ color: "#fff" }}>需要更新{progress}</Text>
-      <ProgressBar progress={progress} color={"#fff"} />
+      <Text style={{ color: "#fff" }}>需要更新</Text>
+      <Text style={{ color: "#fff" }}>当前进度{progress * 100}%</Text>
+      <View style={styles.progressBarContainer}>
+        <ProgressBar
+          progress={progress}
+          theme={{ colors: { primary: theme.colors.primary } }}
+        />
+      </View>
     </View>
   );
 };
 export default UpdateCheck;
 
 const styles = StyleSheet.create({
-  container: {
+  layout: {
     justifyContent: "center",
     alignItems: "center",
     position: "absolute",
     zIndex: 10,
     backgroundColor: "rgba(0,0,0,0.8)",
+  },
+  progressBarContainer: {
+    width: "100%",
+    padding: 16,
   },
 });
