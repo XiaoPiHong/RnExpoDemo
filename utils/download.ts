@@ -55,30 +55,36 @@ const downloadFile = async (url, fileName, setProgress) => {
         const { totalBytesWritten } = downloadProgress;
 
         try {
-          // 检查 totalSize 的合法性
-          if (totalSize <= 0) {
-            console.warn("Invalid totalSize value:", totalSize);
-            setProgress(0);
+          // 验证 totalSize 是否合法
+          if (!totalSize || totalSize <= 0) {
+            console.warn("Invalid or undefined totalSize:", totalSize);
+            setProgress(0); // 重置进度
             return;
           }
 
-          // 使用 Big.js 计算进度值
-          const totalWritten = Big(totalBytesWritten).plus(downloadedSize); // 精确加法
-          const total = Big(totalSize); // 转换为高精度对象
-          const progress = totalWritten.div(total); // 精确除法
+          // 使用 Big.js 计算进度
+          const totalWritten = new Big(totalBytesWritten).plus(downloadedSize); // 精确累加
+          const total = new Big(totalSize); // 转换为 Big 对象
+          let progress = totalWritten.div(total); // 使用 Big.js 的 div 方法计算
 
-          // 限制进度范围到 [0, 1]
-          const clampedProgress = progress.lt(0)
+          // 确保进度在 [0, 1] 范围内
+          progress = progress.lt(0)
             ? new Big(0)
             : progress.gt(1)
             ? new Big(1)
             : progress;
 
-          // 设置进度
-          setProgress(clampedProgress.toNumber()); // 转换为普通数字并设置进度
+          progress = progress.toString();
+          progress = progress.substring(0, 4); // 下取整
+
+          console.log(progress, parseFloat(progress));
+
+          // 转换为普通数字并更新进度
+          setProgress(parseFloat(progress));
         } catch (error) {
+          // 捕获计算错误并处理
           console.error("Error during progress calculation:", error);
-          setProgress(0); // 出现错误时将进度设置为 0
+          setProgress(0); // 出现异常时重置进度
         }
       }
     );

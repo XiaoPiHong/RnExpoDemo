@@ -79,8 +79,9 @@ const UpdateCheck = () => {
       <Text style={{ color: "#fff" }}>需要更新</Text>
       <Text style={{ color: "#fff" }}>当前进度{progress * 100}%</Text>
       <View style={styles.progressBarContainer}>
+        {/** 使用progress属性会有精度问题，使用animatedValue正常 */}
         <ProgressBar
-          progress={progress}
+          animatedValue={progress}
           theme={{ colors: { primary: theme.colors.primary } }}
         />
       </View>
