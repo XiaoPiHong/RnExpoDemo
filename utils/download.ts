@@ -1,8 +1,5 @@
 import * as FileSystem from "expo-file-system";
-import useToast from "@/hooks/useToast";
 import Big from "big.js";
-
-const { toast } = useToast();
 
 const deleteFile = async (fileName) => {
   try {
@@ -38,7 +35,6 @@ const downloadFile = async (url, fileName, setProgress) => {
     const totalSize = parseInt(response.headers.get("Content-Length")!, 10);
     if (downloadedSize === totalSize) {
       console.log("File already fully downloaded.");
-      toast.success("Download Complete,The file is already fully downloaded.");
       setProgress(1);
       return; // 文件已完全下载，无需重新下载
     }
@@ -91,14 +87,8 @@ const downloadFile = async (url, fileName, setProgress) => {
 
     const result = await downloadResumable.downloadAsync();
     console.log("Download completed:", result?.uri);
-    toast.success(
-      `Download Complete,The file has been downloaded to: ${result?.uri}`
-    );
   } catch (error) {
     console.error("Error during download:", error);
-    toast.error(
-      "Download Error,An error occurred during download. Please try again."
-    );
   }
 };
 
