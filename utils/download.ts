@@ -3,7 +3,7 @@ import Big from "big.js";
 
 const deleteFile = async (fileName) => {
   try {
-    const fileUri = FileSystem.cacheDirectory + fileName;
+    const fileUri = FileSystem.documentDirectory + fileName;
     const fileInfo = await FileSystem.getInfoAsync(fileUri);
     if (fileInfo.exists) {
       await FileSystem.deleteAsync(fileUri);
@@ -19,7 +19,7 @@ const deleteFile = async (fileName) => {
 const downloadFile = async (url, fileName, setProgress) => {
   try {
     // 定义文件保存路径
-    const fileUri = FileSystem.cacheDirectory + fileName;
+    const fileUri = FileSystem.documentDirectory + fileName;
 
     // 检查文件是否已存在
     const fileInfo = await FileSystem.getInfoAsync(fileUri);
@@ -36,7 +36,8 @@ const downloadFile = async (url, fileName, setProgress) => {
     if (downloadedSize === totalSize) {
       console.log("File already fully downloaded.");
       setProgress(1);
-      return; // 文件已完全下载，无需重新下载
+      // 文件已完全下载，无需重新下载
+      return fileInfo.uri;
     }
 
     console.log(`Starting/resuming download from ${downloadedSize} bytes...`);
@@ -87,6 +88,7 @@ const downloadFile = async (url, fileName, setProgress) => {
 
     const result = await downloadResumable.downloadAsync();
     console.log("Download completed:", result?.uri);
+    return result?.uri;
   } catch (error) {
     console.error("Error during download:", error);
   }
