@@ -5,6 +5,7 @@ import * as Application from "expo-application";
 import * as downloadlUtil from "@/utils/download";
 import { ProgressBar } from "react-native-paper";
 import { useTheme } from "@/context/useThemeContext";
+import Big from "big.js";
 
 /** ios全包更新需要引导用户到App Store；android全包更新可直接下载安装包 */
 const UpdateCheck = () => {
@@ -31,7 +32,7 @@ const UpdateCheck = () => {
         versionCode: "114",
         versionName: "2.11.0",
         apkUrl:
-          "https://xuexiangjys.oss-cn-shanghai.aliyuncs.com/apk/xupdate_demo_1.0.2.apk",
+          "https://job-artifacts.eascdn.net/production/b142dd04-99f0-4f6e-a072-05e654d071a0/8b998202-5941-493f-be36-6d96a30b8571/application-a1e36d5d-99db-4513-9f3f-cc70bc9144fe.apk?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=www-production%40exponentjs.iam.gserviceaccount.com%2F20241210%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20241210T034402Z&X-Goog-Expires=900&X-Goog-SignedHeaders=host&X-Goog-Signature=73beca950af2f51246ee695eabeef392857a6175a6005466e27adacc576d03f5c1a3097b960f487a91de4ed85cb4d1312ca1b1148a7f8d0ac41d5d34d33fcab07cb2ab53462f7c175f0880e82fb8b8b50b8e8d14c46784f7ea93c9eb4d0bcddfc08e9e791cd6128dc96c7774fd4399b99f9949f6e933e393b7fe24c8f92a0f3699f6d1374f8fdbc3648daf2a02c1821d274bfbe1640fe21044b8a09d63b75741a178a6fd589f996abe9e44471ca793ac6e12f9e2e64c4ce08c018eecc693d34ef207e4a22c187451c1dbc4a361dd9423317aeffd7eb69aa8d4a285775b66ceb811cb01ec2d0859ec9d3e51f6415864f4b4c7836eabda7d9d26b74296a95b60ae",
         size: 4096,
       },
     };
@@ -77,7 +78,9 @@ const UpdateCheck = () => {
       ]}
     >
       <Text style={{ color: "#fff" }}>需要更新</Text>
-      <Text style={{ color: "#fff" }}>当前进度{progress * 100}%</Text>
+      <Text style={{ color: "#fff" }}>
+        当前进度{new Big(progress).times(100).toNumber()}%
+      </Text>
       <View style={styles.progressBarContainer}>
         {/** 使用progress属性会有精度问题，使用animatedValue正常 */}
         <ProgressBar

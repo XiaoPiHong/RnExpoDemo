@@ -6,7 +6,7 @@ const { toast } = useToast();
 
 const deleteFile = async (fileName) => {
   try {
-    const fileUri = FileSystem.documentDirectory + fileName;
+    const fileUri = FileSystem.cacheDirectory + fileName;
     const fileInfo = await FileSystem.getInfoAsync(fileUri);
     if (fileInfo.exists) {
       await FileSystem.deleteAsync(fileUri);
@@ -22,7 +22,7 @@ const deleteFile = async (fileName) => {
 const downloadFile = async (url, fileName, setProgress) => {
   try {
     // 定义文件保存路径
-    const fileUri = FileSystem.documentDirectory + fileName;
+    const fileUri = FileSystem.cacheDirectory + fileName;
 
     // 检查文件是否已存在
     const fileInfo = await FileSystem.getInfoAsync(fileUri);
