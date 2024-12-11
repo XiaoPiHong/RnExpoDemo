@@ -2,9 +2,9 @@ import * as FileSystem from "expo-file-system";
 import * as IntentLauncher from "expo-intent-launcher";
 import Big from "big.js";
 
-const deleteFile = async (fileName) => {
+const deleteFile = async (fileName, directory) => {
   try {
-    const fileUri = FileSystem.documentDirectory + `myDirectory/${fileName}`;
+    const fileUri = FileSystem.cacheDirectory + `${directory}/${fileName}`;
     const fileInfo = await FileSystem.getInfoAsync(fileUri);
     if (fileInfo.exists) {
       await FileSystem.deleteAsync(fileUri);
@@ -17,10 +17,10 @@ const deleteFile = async (fileName) => {
   }
 };
 
-const downloadFile = async (url, fileName, setProgress) => {
+const downloadFile = async (url, fileName, directory, setProgress) => {
   try {
     // 定义文件保存路径和目录路径
-    const directoryUri = FileSystem.documentDirectory + "myDirectory/";
+    const directoryUri = FileSystem.cacheDirectory + `${directory}/`;
     const fileUri = directoryUri + fileName;
 
     // 检查目录是否存在
@@ -107,6 +107,38 @@ const downloadFile = async (url, fileName, setProgress) => {
     setProgress(0); // 发生错误时，重置进度
   }
 };
+const clearDirectoryRecursively = async (directory, fileToSkip) => {
+  try {
+    const dirUri = FileSystem.cacheDirectory + directory;
+
+    // 获取文件夹中的所有文件和子文件夹
+    const items = await FileSystem.readDirectoryAsync(dirUri);
+
+    let isEmpty = true; // 标记文件夹是否为空
+
+    for (let item of items) {
+      const itemUri = dirUri + "/" + item;
+
+      // 判断是否是需要跳过的文件
+      if (item === fileToSkip) {
+        console.log(`Skipping: ${itemUri}`);
+        isEmpty = false;
+        continue; // 跳过删除该文件
+      }
+
+      await FileSystem.deleteAsync(itemUri, { idempotent: true });
+      console.log(`Deleted: ${itemUri}`);
+    }
+
+    // 只有在文件夹为空时，才删除文件夹
+    if (isEmpty) {
+      await FileSystem.deleteAsync(dirUri, { idempotent: true });
+      console.log(`Deleted empty directory: ${dirUri}`);
+    }
+  } catch (error) {
+    console.error("Error clearing directory:", error);
+  }
+};
 
 const installAPK = async (fileUri) => {
   try {
@@ -135,4 +167,4 @@ const installAPK = async (fileUri) => {
   }
 };
 
-export { downloadFile, deleteFile, installAPK };
+export { downloadFile, deleteFile, installAPK, clearDirectoryRecursively };

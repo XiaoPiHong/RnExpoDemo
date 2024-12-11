@@ -1,15 +1,13 @@
-import { View, Text, Platform, StyleSheet } from "react-native";
+import { View, Platform, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useState, useEffect } from "react";
 import * as Application from "expo-application";
 import * as downloadlUtil from "@/utils/download";
-import { ProgressBar } from "react-native-paper";
-import { useTheme } from "@/context/useThemeContext";
-import Big from "big.js";
+import * as Linking from "expo-linking";
+import Tips from "./components/tips";
 
 /** ios全包更新需要引导用户到App Store；android全包更新可直接下载安装包 */
 const UpdateCheck = () => {
-  const { theme } = useTheme();
   const insets = useSafeAreaInsets();
   // [0,1]
   const [progress, setProgress] = useState(0);
@@ -51,28 +49,30 @@ const UpdateCheck = () => {
         versionCode !== newVersionInfo.ios.versionCode
       ) {
         setVisible(true);
+        Linking.openURL(newVersionInfo.ios.appStoreUrl);
       }
     }
     if (Platform.OS === "android") {
-      if (
-        versionCode !== newVersionInfo.android.versionName ||
-        versionName !== newVersionInfo.android.versionCode
-      ) {
-        downloadlUtil
-          .deleteFile(getFileNameFromUrl(newVersionInfo.android.apkUrl))
-          .then(async () => {
+      downloadlUtil
+        .clearDirectoryRecursively(
+          "apk",
+          getFileNameFromUrl(newVersionInfo.android.apkUrl)
+        )
+        .then(async () => {
+          if (
+            versionCode !== newVersionInfo.android.versionName ||
+            versionName !== newVersionInfo.android.versionCode
+          ) {
             setVisible(true);
-            downloadlUtil
-              .downloadFile(
-                newVersionInfo.android.apkUrl,
-                getFileNameFromUrl(newVersionInfo.android.apkUrl),
-                setProgress
-              )
-              .then(async (result) => {
-                downloadlUtil.installAPK(result);
-              });
-          });
-      }
+            const uri = await downloadlUtil.downloadFile(
+              newVersionInfo.android.apkUrl,
+              getFileNameFromUrl(newVersionInfo.android.apkUrl),
+              "apk",
+              setProgress
+            );
+            downloadlUtil.installAPK(uri);
+          }
+        });
     }
   }, []);
   return (
@@ -88,17 +88,7 @@ const UpdateCheck = () => {
         },
       ]}
     >
-      <Text style={{ color: "#fff" }}>需要更新</Text>
-      <Text style={{ color: "#fff" }}>
-        当前进度{new Big(progress).times(100).toNumber()}%
-      </Text>
-      <View style={styles.progressBarContainer}>
-        {/** 使用progress属性会有精度问题，使用animatedValue正常 */}
-        <ProgressBar
-          animatedValue={progress}
-          theme={{ colors: { primary: theme.colors.primary } }}
-        />
-      </View>
+      <Tips progress={progress} />
     </View>
   );
 };
@@ -111,9 +101,5 @@ const styles = StyleSheet.create({
     position: "absolute",
     zIndex: 10,
     backgroundColor: "rgba(0,0,0,0.8)",
-  },
-  progressBarContainer: {
-    width: "100%",
-    padding: 16,
   },
 });
