@@ -107,7 +107,10 @@ const downloadFile = async (url, fileName, directory, setProgress) => {
     setProgress(0); // 发生错误时，重置进度
   }
 };
-const clearDirectoryRecursively = async (directory, fileToSkip) => {
+const clearDirectoryRecursively = async (
+  directory: string,
+  fileToSkip?: string
+) => {
   try {
     const dirUri = FileSystem.cacheDirectory + directory;
 
@@ -120,7 +123,7 @@ const clearDirectoryRecursively = async (directory, fileToSkip) => {
       const itemUri = dirUri + "/" + item;
 
       // 判断是否是需要跳过的文件
-      if (item === fileToSkip) {
+      if (fileToSkip && item === fileToSkip) {
         console.log(`Skipping: ${itemUri}`);
         isEmpty = false;
         continue; // 跳过删除该文件

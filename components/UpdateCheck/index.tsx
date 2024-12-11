@@ -6,8 +6,26 @@ import * as downloadlUtil from "@/utils/download";
 import * as Linking from "expo-linking";
 import Tips from "./components/tips";
 
+export interface IVersionInfo {
+  ios: {
+    versionCode: string;
+    versionName: string;
+    appStoreUrl: string;
+    modifyContent: string;
+    size: number;
+  };
+  android: {
+    versionCode: string;
+    versionName: string;
+    apkUrl: string;
+    modifyContent: string;
+    size: number;
+  };
+}
+
 /** ios全包更新需要引导用户到App Store；android全包更新可直接下载安装包 */
 const UpdateCheck = () => {
+  const [versionInfo, setVersionInfo] = useState<IVersionInfo | null>(null);
   const insets = useSafeAreaInsets();
   // [0,1]
   const [progress, setProgress] = useState(0);
@@ -25,6 +43,23 @@ const UpdateCheck = () => {
     return fileName;
   };
 
+  const install = async (info: IVersionInfo) => {
+    if (Platform.OS === "ios") {
+      Linking.openURL(info.ios.appStoreUrl);
+    }
+    if (Platform.OS === "android") {
+      const apkName = getFileNameFromUrl(info.android.apkUrl);
+
+      const uri = await downloadlUtil.downloadFile(
+        info.android.apkUrl,
+        apkName,
+        "apk",
+        setProgress
+      );
+      downloadlUtil.installAPK(uri);
+    }
+  };
+
   useEffect(() => {
     if (!__DEV__) {
       const newVersionInfo = {
@@ -32,6 +67,8 @@ const UpdateCheck = () => {
           versionCode: "2.11.0",
           versionName: "2.11.0",
           appStoreUrl: "https://apps.apple.com/app/id123456789",
+          modifyContent:
+            "\r\n1、优化api接口。\r\n2、添加使用demo演示。\r\n3、新增自定义更新服务API接口。\r\n4、优化更新提示界面。",
           size: 4096,
         },
         android: {
@@ -39,37 +76,34 @@ const UpdateCheck = () => {
           versionName: "2.11.0",
           apkUrl:
             "https://xuexiangjys.oss-cn-shanghai.aliyuncs.com/apk/xupdate_demo_1.0.2.apk",
+          modifyContent:
+            "\r\n1、优化api接口。\r\n2、添加使用demo演示。\r\n3、新增自定义更新服务API接口。\r\n4、优化更新提示界面。",
           size: 4096,
         },
       };
 
+      setVersionInfo(newVersionInfo);
+
+      /** 是否最新版本 */
+      const isLastVersion =
+        versionName === newVersionInfo.android.versionName &&
+        versionCode === newVersionInfo.android.versionCode;
+
       if (Platform.OS === "ios") {
-        if (
-          versionName !== newVersionInfo.ios.versionName ||
-          versionCode !== newVersionInfo.ios.versionCode
-        ) {
+        if (!isLastVersion) {
           setVisible(true);
-          Linking.openURL(newVersionInfo.ios.appStoreUrl);
+          install(newVersionInfo);
         }
       }
       if (Platform.OS === "android") {
         const apkName = getFileNameFromUrl(newVersionInfo.android.apkUrl);
-
+        /** 已经是最新版本需清空apk目录（防止已经安装过的版本未删除），否者保留最新版本的文件来更新 */
         downloadlUtil
-          .clearDirectoryRecursively("apk", apkName)
+          .clearDirectoryRecursively("apk", isLastVersion ? void 0 : apkName)
           .then(async () => {
-            if (
-              versionName !== newVersionInfo.android.versionName ||
-              versionCode !== newVersionInfo.android.versionCode
-            ) {
+            if (!isLastVersion) {
               setVisible(true);
-              const uri = await downloadlUtil.downloadFile(
-                newVersionInfo.android.apkUrl,
-                apkName,
-                "apk",
-                setProgress
-              );
-              downloadlUtil.installAPK(uri);
+              install(newVersionInfo);
             }
           });
       }
@@ -88,7 +122,7 @@ const UpdateCheck = () => {
         },
       ]}
     >
-      <Tips progress={progress} />
+      <Tips progress={progress} versionInfo={versionInfo} install={install} />
     </View>
   );
 };
