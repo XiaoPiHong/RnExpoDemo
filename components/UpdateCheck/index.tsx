@@ -26,53 +26,53 @@ const UpdateCheck = () => {
   };
 
   useEffect(() => {
-    // if (!__DEV__) {
-    const newVersionInfo = {
-      ios: {
-        versionCode: "2.11.0",
-        versionName: "2.11.0",
-        appStoreUrl: "https://apps.apple.com/app/id123456789",
-        size: 4096,
-      },
-      android: {
-        versionCode: "114",
-        versionName: "2.11.0",
-        apkUrl:
-          "https://xuexiangjys.oss-cn-shanghai.aliyuncs.com/apk/xupdate_demo_1.0.2.apk",
-        size: 4096,
-      },
-    };
+    if (!__DEV__) {
+      const newVersionInfo = {
+        ios: {
+          versionCode: "2.11.0",
+          versionName: "2.11.0",
+          appStoreUrl: "https://apps.apple.com/app/id123456789",
+          size: 4096,
+        },
+        android: {
+          versionCode: "114",
+          versionName: "2.11.0",
+          apkUrl:
+            "https://xuexiangjys.oss-cn-shanghai.aliyuncs.com/apk/xupdate_demo_1.0.2.apk",
+          size: 4096,
+        },
+      };
 
-    if (Platform.OS === "ios") {
-      if (
-        versionName !== newVersionInfo.ios.versionName ||
-        versionCode !== newVersionInfo.ios.versionCode
-      ) {
-        setVisible(true);
-        Linking.openURL(newVersionInfo.ios.appStoreUrl);
+      if (Platform.OS === "ios") {
+        if (
+          versionName !== newVersionInfo.ios.versionName ||
+          versionCode !== newVersionInfo.ios.versionCode
+        ) {
+          setVisible(true);
+          Linking.openURL(newVersionInfo.ios.appStoreUrl);
+        }
       }
-    }
-    if (Platform.OS === "android") {
-      downloadlUtil
-        .clearDirectoryRecursively(
-          "apk",
-          getFileNameFromUrl(newVersionInfo.android.apkUrl)
-        )
-        .then(async () => {
-          if (
-            versionCode !== newVersionInfo.android.versionName ||
-            versionName !== newVersionInfo.android.versionCode
-          ) {
-            setVisible(true);
-            const uri = await downloadlUtil.downloadFile(
-              newVersionInfo.android.apkUrl,
-              getFileNameFromUrl(newVersionInfo.android.apkUrl),
-              "apk",
-              setProgress
-            );
-            downloadlUtil.installAPK(uri);
-          }
-        });
+      if (Platform.OS === "android") {
+        const apkName = getFileNameFromUrl(newVersionInfo.android.apkUrl);
+
+        downloadlUtil
+          .clearDirectoryRecursively("apk", apkName)
+          .then(async () => {
+            if (
+              versionName !== newVersionInfo.android.versionName ||
+              versionCode !== newVersionInfo.android.versionCode
+            ) {
+              setVisible(true);
+              const uri = await downloadlUtil.downloadFile(
+                newVersionInfo.android.apkUrl,
+                apkName,
+                "apk",
+                setProgress
+              );
+              downloadlUtil.installAPK(uri);
+            }
+          });
+      }
     }
   }, []);
   return (
