@@ -174,6 +174,4 @@ web 打包无需使用 eas 云打包，所以是读取本地的.env 配置文件
    - **确保** `android.versionCode` 和 `ios.buildNumber` 都递增。
 2. 使用脚本或自动化工具（如 GitHub Actions）来管理版本号变化。
 
-12、版本检测（待实现）
-
-13、增量更新（待实现）
+12、增量更新（待实现）

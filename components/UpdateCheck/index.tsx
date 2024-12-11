@@ -61,53 +61,53 @@ const UpdateCheck = () => {
   };
 
   useEffect(() => {
-    // if (!__DEV__) {
-    const newVersionInfo = {
-      ios: {
-        versionCode: "2.11.0",
-        versionName: "2.11.0",
-        appStoreUrl: "https://apps.apple.com/app/id123456789",
-        modifyContent:
-          "\r\n1、优化api接口。\r\n2、添加使用demo演示。\r\n3、新增自定义更新服务API接口。\r\n4、优化更新提示界面。",
-        size: 4096,
-      },
-      android: {
-        versionCode: "114",
-        versionName: "2.11.0",
-        apkUrl:
-          "https://xuexiangjys.oss-cn-shanghai.aliyuncs.com/apk/xupdate_demo_1.0.2.apk",
-        modifyContent:
-          "\r\n1、优化api接口。\r\n2、添加使用demo演示。\r\n3、新增自定义更新服务API接口。\r\n4、优化更新提示界面。",
-        size: 4096,
-      },
-    };
+    if (!__DEV__) {
+      const newVersionInfo = {
+        ios: {
+          versionCode: "2.11.0",
+          versionName: "2.11.0",
+          appStoreUrl: "https://apps.apple.com/app/id123456789",
+          modifyContent:
+            "\r\n1、优化api接口。\r\n2、添加使用demo演示。\r\n3、新增自定义更新服务API接口。\r\n4、优化更新提示界面。",
+          size: 4096,
+        },
+        android: {
+          versionCode: "114",
+          versionName: "2.11.0",
+          apkUrl:
+            "https://xuexiangjys.oss-cn-shanghai.aliyuncs.com/apk/xupdate_demo_1.0.2.apk",
+          modifyContent:
+            "\r\n1、优化api接口。\r\n2、添加使用demo演示。\r\n3、新增自定义更新服务API接口。\r\n4、优化更新提示界面。",
+          size: 4096,
+        },
+      };
 
-    setVersionInfo(newVersionInfo);
+      setVersionInfo(newVersionInfo);
 
-    /** 是否最新版本 */
-    const isLastVersion =
-      versionName === newVersionInfo.android.versionName &&
-      versionCode === newVersionInfo.android.versionCode;
+      /** 是否最新版本 */
+      const isLastVersion =
+        versionName === newVersionInfo.android.versionName &&
+        versionCode === newVersionInfo.android.versionCode;
 
-    if (Platform.OS === "ios") {
-      if (!isLastVersion) {
-        setVisible(true);
-        install(newVersionInfo);
+      if (Platform.OS === "ios") {
+        if (!isLastVersion) {
+          setVisible(true);
+          install(newVersionInfo);
+        }
+      }
+      if (Platform.OS === "android") {
+        const apkName = getFileNameFromUrl(newVersionInfo.android.apkUrl);
+        /** 已经是最新版本需清空apk目录（防止已经安装过的版本未删除），否者保留最新版本的文件来更新 */
+        downloadlUtil
+          .clearDirectoryRecursively("apk", isLastVersion ? void 0 : apkName)
+          .then(async () => {
+            if (!isLastVersion) {
+              setVisible(true);
+              install(newVersionInfo);
+            }
+          });
       }
     }
-    if (Platform.OS === "android") {
-      const apkName = getFileNameFromUrl(newVersionInfo.android.apkUrl);
-      /** 已经是最新版本需清空apk目录（防止已经安装过的版本未删除），否者保留最新版本的文件来更新 */
-      downloadlUtil
-        .clearDirectoryRecursively("apk", isLastVersion ? void 0 : apkName)
-        .then(async () => {
-          if (!isLastVersion) {
-            setVisible(true);
-            install(newVersionInfo);
-          }
-        });
-    }
-    // }
   }, []);
   return (
     <View
@@ -122,7 +122,11 @@ const UpdateCheck = () => {
         },
       ]}
     >
-      <VersionInfo progress={progress} versionInfo={versionInfo} install={install} />
+      <VersionInfo
+        progress={progress}
+        versionInfo={versionInfo}
+        install={install}
+      />
     </View>
   );
 };
