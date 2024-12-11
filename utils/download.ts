@@ -1,9 +1,10 @@
 import * as FileSystem from "expo-file-system";
+import * as IntentLauncher from "expo-intent-launcher";
 import Big from "big.js";
 
 const deleteFile = async (fileName) => {
   try {
-    const fileUri = FileSystem.documentDirectory + fileName;
+    const fileUri = FileSystem.documentDirectory + `myDirectory/${fileName}`;
     const fileInfo = await FileSystem.getInfoAsync(fileUri);
     if (fileInfo.exists) {
       await FileSystem.deleteAsync(fileUri);
@@ -18,8 +19,20 @@ const deleteFile = async (fileName) => {
 
 const downloadFile = async (url, fileName, setProgress) => {
   try {
-    // 定义文件保存路径
-    const fileUri = FileSystem.documentDirectory + fileName;
+    // 定义文件保存路径和目录路径
+    const directoryUri = FileSystem.documentDirectory + "myDirectory/";
+    const fileUri = directoryUri + fileName;
+
+    // 检查目录是否存在
+    const directoryInfo = await FileSystem.getInfoAsync(directoryUri);
+
+    // 如果目录不存在，创建目录
+    if (!directoryInfo.exists) {
+      console.log("Directory does not exist, creating directory...");
+      await FileSystem.makeDirectoryAsync(directoryUri, {
+        intermediates: true,
+      });
+    }
 
     // 检查文件是否已存在
     const fileInfo = await FileSystem.getInfoAsync(fileUri);
@@ -91,7 +104,35 @@ const downloadFile = async (url, fileName, setProgress) => {
     return result?.uri;
   } catch (error) {
     console.error("Error during download:", error);
+    setProgress(0); // 发生错误时，重置进度
   }
 };
 
-export { downloadFile, deleteFile };
+const installAPK = async (fileUri) => {
+  try {
+    // 检查 APK 文件是否存在
+    const fileInfo = await FileSystem.getInfoAsync(fileUri);
+
+    if (!fileInfo.exists) {
+      console.log("APK file does not exist.");
+      return;
+    }
+    // 获取file://URI 并将其转换为内容 URI（content://），以便 Expo 之外的其他应用程序可以访问它
+    const cUri = await FileSystem.getContentUriAsync(fileInfo.uri);
+
+    const result = await IntentLauncher.startActivityAsync(
+      "android.intent.action.VIEW",
+      {
+        data: cUri,
+        flags: 1,
+      }
+    );
+
+    console.log("Intent to install APK sent!");
+    return result;
+  } catch (error) {
+    console.error("Error launching intent:", error);
+  }
+};
+
+export { downloadFile, deleteFile, installAPK };

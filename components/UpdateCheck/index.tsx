@@ -6,8 +6,6 @@ import * as downloadlUtil from "@/utils/download";
 import { ProgressBar } from "react-native-paper";
 import { useTheme } from "@/context/useThemeContext";
 import Big from "big.js";
-import * as IntentLauncher from "expo-intent-launcher";
-import RNFS from "react-native-fs";
 
 /** ios全包更新需要引导用户到App Store；android全包更新可直接下载安装包 */
 const UpdateCheck = () => {
@@ -60,33 +58,22 @@ const UpdateCheck = () => {
         versionCode !== newVersionInfo.android.versionName ||
         versionName !== newVersionInfo.android.versionCode
       ) {
-        // downloadlUtil
-        //   .deleteFile(getFileNameFromUrl(newVersionInfo.android.apkUrl))
-        //   .then(async () => {
-        setVisible(true);
         downloadlUtil
-          .downloadFile(
-            newVersionInfo.android.apkUrl,
-            getFileNameFromUrl(newVersionInfo.android.apkUrl),
-            setProgress
-          )
-          .then(async (result) => {
-            const externalPath =
-              RNFS.ExternalDirectoryPath + `/${getFileNameFromUrl(result!)}`;
-            await RNFS.moveFile(result!, externalPath);
-            await IntentLauncher.startActivityAsync(
-              "android.intent.action.VIEW",
-              {
-                data: `file://${externalPath}`,
-                type: "application/vnd.android.package-archive",
-              }
-            );
+          .deleteFile(getFileNameFromUrl(newVersionInfo.android.apkUrl))
+          .then(async () => {
+            setVisible(true);
+            downloadlUtil
+              .downloadFile(
+                newVersionInfo.android.apkUrl,
+                getFileNameFromUrl(newVersionInfo.android.apkUrl),
+                setProgress
+              )
+              .then(async (result) => {
+                downloadlUtil.installAPK(result);
+              });
           });
-
-        // });
       }
     }
-    // }
   }, []);
   return (
     <View
