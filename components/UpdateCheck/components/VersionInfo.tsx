@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Platform } from "react-native";
 import Big from "big.js";
 import { useTheme } from "@/context/useThemeContext";
 import { ProgressBar } from "react-native-paper";
-import type { IVersionInfo } from "../";
+import type { IVersionInfo } from "..";
 import { Button } from "react-native-paper";
 
 const Tips = ({
