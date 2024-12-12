@@ -3,21 +3,47 @@ import Big from "big.js";
 import { useTheme } from "@/context/useThemeContext";
 import { ProgressBar } from "react-native-paper";
 import type { IVersionInfo } from "..";
-import { Button } from "react-native-paper";
+import { Button, IconButton } from "react-native-paper";
 
 const Tips = ({
   progress,
   versionInfo,
-  install,
+  methods: { install, setVisible },
 }: {
   progress: number;
   versionInfo: IVersionInfo | null;
-  install: (info: IVersionInfo) => void;
+  methods: {
+    install: (info: IVersionInfo) => void;
+    setVisible: (visible: boolean) => void;
+  };
 }) => {
   const { theme } = useTheme();
 
+  const getClose = () => {
+    switch (Platform.OS) {
+      case "ios":
+        return versionInfo?.ios.updateStatus === 0;
+      case "android":
+        return versionInfo?.android.updateStatus === 0;
+      default:
+        return false;
+    }
+  };
+
+  const onClickCloseBtn = () => {
+    setVisible(false);
+  };
+
   return (
     <View style={styles.layout}>
+      {getClose() && (
+        <IconButton
+          style={styles.closeBtn}
+          icon="close"
+          size={20}
+          onPress={onClickCloseBtn}
+        />
+      )}
       <Text style={styles.updateTitle}>更新提示</Text>
       {Platform.OS === "ios" && (
         <>
@@ -84,6 +110,11 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: "#fff",
     borderRadius: 8,
+  },
+  closeBtn: {
+    position: "absolute",
+    top: 0,
+    right: 0,
   },
   updateTitle: {
     fontSize: 16,

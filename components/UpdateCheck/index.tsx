@@ -13,6 +13,7 @@ export interface IVersionInfo {
     appStoreUrl: string;
     modifyContent: string;
     size: number;
+    updateStatus: number;
   };
   android: {
     versionCode: string;
@@ -20,6 +21,7 @@ export interface IVersionInfo {
     apkUrl: string;
     modifyContent: string;
     size: number;
+    updateStatus: number;
   };
 }
 
@@ -70,6 +72,7 @@ const UpdateCheck = () => {
         modifyContent:
           "\r\n1、优化api接口。\r\n2、添加使用demo演示。\r\n3、新增自定义更新服务API接口。\r\n4、优化更新提示界面。",
         size: 4096,
+        updateStatus: 0, // 0 普通更新 1强制更新
       },
       android: {
         versionCode: "114",
@@ -79,6 +82,7 @@ const UpdateCheck = () => {
         modifyContent:
           "\r\n1、优化api接口。\r\n2、添加使用demo演示。\r\n3、新增自定义更新服务API接口。\r\n4、优化更新提示界面。",
         size: 4096,
+        updateStatus: 0,
       },
     };
 
@@ -125,7 +129,10 @@ const UpdateCheck = () => {
       <VersionInfo
         progress={progress}
         versionInfo={versionInfo}
-        install={install}
+        methods={{
+          install,
+          setVisible,
+        }}
       />
     </View>
   );
