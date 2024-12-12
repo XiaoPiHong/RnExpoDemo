@@ -138,6 +138,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     position: "absolute",
     zIndex: 10,
-    backgroundColor: "rgba(0,0,0,0.8)",
+    backgroundColor: "rgba(0,0,0,0.7)",
   },
 });

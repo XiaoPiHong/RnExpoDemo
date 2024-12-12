@@ -18,12 +18,11 @@ const Tips = ({
 
   return (
     <View style={styles.layout}>
-      <Text style={{ color: "#fff" }}>需要更新</Text>
+      <Text style={styles.updateTitle}>更新提示</Text>
       {Platform.OS === "ios" && (
         <>
           <Text
             style={{
-              color: "#fff",
               lineHeight: 20,
               marginBottom: 16,
             }}
@@ -39,9 +38,16 @@ const Tips = ({
       )}
       {Platform.OS === "android" && (
         <>
+          <View style={styles.versionContainer}>
+            <Text style={styles.versionTitle}>
+              是否更新到{versionInfo?.android.versionName}版本？
+            </Text>
+            <Text style={styles.versionSize}>
+              新版本大小：{versionInfo?.android.size! / 1024}M
+            </Text>
+          </View>
           <Text
             style={{
-              color: "#fff",
               lineHeight: 20,
               marginBottom: 16,
             }}
@@ -55,9 +61,7 @@ const Tips = ({
               theme={{ colors: { primary: theme.colors.primary } }}
             />
           </View>
-          <Text style={{ color: "#fff", marginBottom: 16 }}>
-            当前进度{new Big(progress).times(100).toNumber()}%
-          </Text>
+          <Text>当前进度{new Big(progress).times(100).toNumber()}%</Text>
           {progress === 1 && (
             <View style={styles.btnContainer}>
               <Button mode="contained" onPress={() => install(versionInfo!)}>
@@ -74,16 +78,34 @@ export default Tips;
 
 const styles = StyleSheet.create({
   layout: {
-    width: "100%",
+    width: "80%",
     justifyContent: "center",
     alignItems: "center",
-    paddingLeft: 16,
-    paddingRight: 16,
+    padding: 16,
+    backgroundColor: "#fff",
+    borderRadius: 8,
+  },
+  updateTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  versionContainer: {
+    width: "100%",
+    marginTop: 16,
+    gap: 4,
+  },
+  versionTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  versionSize: {
+    color: "#41454c",
   },
   progressBarContainer: {
     width: "100%",
   },
   btnContainer: {
+    marginTop: 16,
     width: "100%",
   },
 });
