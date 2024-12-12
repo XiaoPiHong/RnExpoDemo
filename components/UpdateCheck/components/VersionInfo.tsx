@@ -21,21 +21,31 @@ const Tips = ({
       <Text style={{ color: "#fff" }}>需要更新</Text>
       {Platform.OS === "ios" && (
         <>
-          <Text style={{ color: "#fff" }}>
+          <Text
+            style={{
+              color: "#fff",
+              lineHeight: 20,
+              marginBottom: 16,
+            }}
+          >
             {versionInfo?.ios.modifyContent}
           </Text>
-          <Button
-            icon="cellphone-arrow-down"
-            mode="contained"
-            onPress={() => install(versionInfo!)}
-          >
-            前往App Store更新
-          </Button>
+          <View style={styles.btnContainer}>
+            <Button mode="contained" onPress={() => install(versionInfo!)}>
+              前往App Store更新
+            </Button>
+          </View>
         </>
       )}
       {Platform.OS === "android" && (
         <>
-          <Text style={{ color: "#fff" }}>
+          <Text
+            style={{
+              color: "#fff",
+              lineHeight: 20,
+              marginBottom: 16,
+            }}
+          >
             {versionInfo?.android.modifyContent}
           </Text>
           <View style={styles.progressBarContainer}>
@@ -45,17 +55,15 @@ const Tips = ({
               theme={{ colors: { primary: theme.colors.primary } }}
             />
           </View>
-          <Text style={{ color: "#fff" }}>
+          <Text style={{ color: "#fff", marginBottom: 16 }}>
             当前进度{new Big(progress).times(100).toNumber()}%
           </Text>
           {progress === 1 && (
-            <Button
-              icon="cellphone-arrow-down"
-              mode="contained"
-              onPress={() => install(versionInfo!)}
-            >
-              更新
-            </Button>
+            <View style={styles.btnContainer}>
+              <Button mode="contained" onPress={() => install(versionInfo!)}>
+                更新
+              </Button>
+            </View>
           )}
         </>
       )}
@@ -69,9 +77,13 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
+    paddingLeft: 16,
+    paddingRight: 16,
   },
   progressBarContainer: {
     width: "100%",
-    padding: 16,
+  },
+  btnContainer: {
+    width: "100%",
   },
 });
