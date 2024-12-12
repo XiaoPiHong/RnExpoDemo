@@ -96,7 +96,6 @@ const UpdateCheck = () => {
     if (Platform.OS === "ios") {
       if (!isLastVersion) {
         setVisible(true);
-        install(newVersionInfo);
       }
     }
     if (Platform.OS === "android") {
@@ -107,7 +106,6 @@ const UpdateCheck = () => {
         .then(async () => {
           if (!isLastVersion) {
             setVisible(true);
-            install(newVersionInfo);
           }
         });
     }

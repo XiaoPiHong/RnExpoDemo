@@ -88,13 +88,11 @@ const Tips = ({
             />
           </View>
           <Text>当前进度{new Big(progress).times(100).toNumber()}%</Text>
-          {progress === 1 && (
-            <View style={styles.btnContainer}>
-              <Button mode="contained" onPress={() => install(versionInfo!)}>
-                更新
-              </Button>
-            </View>
-          )}
+          <View style={styles.btnContainer}>
+            <Button mode="contained" onPress={() => install(versionInfo!)}>
+              {progress === 1 ? "安装" : "下载"}
+            </Button>
+          </View>
         </>
       )}
     </View>
