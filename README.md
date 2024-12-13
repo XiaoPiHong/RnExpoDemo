@@ -1,3 +1,5 @@
+![](demo/demo.gif)
+
 1、注册 expo 账号
 
 https://expo.dev/

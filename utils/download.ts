@@ -114,6 +114,14 @@ const clearDirectoryRecursively = async (
   try {
     const dirUri = FileSystem.cacheDirectory + directory;
 
+    // 检查文件夹是否存在
+    const dirInfo = await FileSystem.getInfoAsync(dirUri);
+    if (!dirInfo.exists) {
+      console.log("Directory does not exist, creating directory...");
+      await FileSystem.makeDirectoryAsync(dirUri, { intermediates: true });
+      return;
+    }
+
     // 获取文件夹中的所有文件和子文件夹
     const items = await FileSystem.readDirectoryAsync(dirUri);
 
