@@ -1,3 +1,4 @@
+import React from "react";
 import { View, Text, StyleSheet, Platform } from "react-native";
 import Big from "big.js";
 import { useTheme } from "@/context/useThemeContext";
