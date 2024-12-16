@@ -6,7 +6,7 @@ import { ProgressBar } from "react-native-paper";
 import type { IVersionInfo } from "..";
 import { Button, IconButton } from "react-native-paper";
 
-const Tips = ({
+const VersionInfo = ({
   progress,
   versionInfo,
   methods: { install, setVisible },
@@ -99,7 +99,7 @@ const Tips = ({
     </View>
   );
 };
-export default Tips;
+export default VersionInfo;
 
 const styles = StyleSheet.create({
   layout: {
