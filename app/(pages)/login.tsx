@@ -71,7 +71,7 @@ export default function LoginScreen() {
       .then((res) => {
         const { data } = res;
         dispatch(updateTokenConfig(data));
-        router.replace("/explore");
+        router.replace("/");
       });
   };
 
