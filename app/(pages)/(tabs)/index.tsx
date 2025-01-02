@@ -1,10 +1,35 @@
+import { useEffect } from "react";
 import { Image, StyleSheet, Platform } from "react-native";
 import { HelloWave } from "@/components/HelloWave";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import * as Updates from "expo-updates";
+import Constants from "expo-constants";
+import { Button } from "react-native-paper";
 
 export default function HomeScreen() {
+  async function onFetchUpdateAsync() {
+    // 独立运行时（你通过 expo build 或 eas build 构建了独立应用（APK 或 IPA）、用户从应用商店或直接安装包安装并运行应用）才检查更新
+    if (Constants.executionEnvironment === "standalone") {
+      try {
+        const update = await Updates.checkForUpdateAsync();
+
+        if (update.isAvailable) {
+          await Updates.fetchUpdateAsync();
+          await Updates.reloadAsync();
+        }
+      } catch (error) {
+        // You can also add an alert() to see the error message in case of an error when fetching updates.
+        alert(`Error fetching latest Expo update: ${error}`);
+      }
+    }
+  }
+
+  useEffect(() => {
+    // onFetchUpdateAsync();
+  }, []);
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
@@ -15,7 +40,8 @@ export default function HomeScreen() {
         />
       }
     >
-      <ThemedView style={styles.titleContainer}>
+      <Button onPress={onFetchUpdateAsync}>检查更新</Button>
+      {/* <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Welcome!</ThemedText>
         <HelloWave />
       </ThemedView>
@@ -52,7 +78,7 @@ export default function HomeScreen() {
           <ThemedText type="defaultSemiBold">app</ThemedText> to{" "}
           <ThemedText type="defaultSemiBold">app-example</ThemedText>.
         </ThemedText>
-      </ThemedView>
+      </ThemedView> */}
     </ParallaxScrollView>
   );
 }
