@@ -7,23 +7,29 @@ import { ThemedView } from "@/components/ThemedView";
 import * as Updates from "expo-updates";
 import Constants from "expo-constants";
 import { Button } from "react-native-paper";
+import useToast from "@/hooks/useToast";
 
 export default function HomeScreen() {
+  const { toast } = useToast();
+
   async function onFetchUpdateAsync() {
     // 独立运行时（你通过 expo build 或 eas build 构建了独立应用（APK 或 IPA）、用户从应用商店或直接安装包安装并运行应用）才检查更新
-    if (Constants.executionEnvironment === "standalone") {
-      try {
-        const update = await Updates.checkForUpdateAsync();
-
-        if (update.isAvailable) {
-          await Updates.fetchUpdateAsync();
-          await Updates.reloadAsync();
-        }
-      } catch (error) {
-        // You can also add an alert() to see the error message in case of an error when fetching updates.
-        alert(`Error fetching latest Expo update: ${error}`);
+    // if (Constants.executionEnvironment === "standalone") {
+    try {
+      toast.info(Constants.executionEnvironment);
+      const update = await Updates.checkForUpdateAsync();
+      toast.info(Constants.executionEnvironment, {
+        text1: String(update.isAvailable),
+      });
+      if (update.isAvailable) {
+        await Updates.fetchUpdateAsync();
+        await Updates.reloadAsync();
       }
+    } catch (error) {
+      // You can also add an alert() to see the error message in case of an error when fetching updates.
+      alert(`Error fetching latest Expo update: ${error}`);
     }
+    // }
   }
 
   useEffect(() => {
