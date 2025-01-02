@@ -45,7 +45,7 @@ const VersionInfo = ({
           onPress={onClickCloseBtn}
         />
       )}
-      <Text style={styles.updateTitle}>更新提示</Text>
+      <Text style={styles.updateTitle}>更新提示（测试）</Text>
       {Platform.OS === "ios" && (
         <>
           <Text

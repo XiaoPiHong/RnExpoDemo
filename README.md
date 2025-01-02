@@ -176,4 +176,63 @@ web 打包无需使用 eas 云打包，所以是读取本地的.env 配置文件
    - **确保** `android.versionCode` 和 `ios.buildNumber` 都递增。
 2. 使用脚本或自动化工具（如 GitHub Actions）来管理版本号变化。
 
-12、增量更新（待实现）
+12、增量更新（目前使用方案是 expo 官方的 expo-updates 和官方的 EAS Updates 工作流）
+
+expo-updates 还支持自定义更新服务，但是需要符合 Expo Updates 的规范，它是一种向在多个平台上运行的 Expo 应用程序提供更新的[协议](https://docs.expo.dev/technical-specs/expo-updates-1/)
+
+配置：
+
+```bash
+# eas-cli是从终端与 EAS 服务交互的命令行应用程序
+npm install --global eas-cli
+
+# 登录到自己的expo账号
+eas login
+
+# 下载依赖包
+npx expo install expo-updates
+
+# 自动添加一些配置（runtimeVersion updates.url extra.eas.projectId等）
+eas update:configure
+# 修改app.json配置文件（eas update:configure之后默认是使用"runtimeVersion": { "policy": "appVersion" }，表示使用应用的版本号（app.json 中的 version 字段）作为 runtimeVersion，我们这里改成手动控制）
+# {
+#   "expo":{
+#     "runtimeVersion": "1.0.0",
+#     "updates": {
+#       "url": "https://u.expo.dev/xxx"
+#     }
+#   }
+# }
+```
+
+使用：
+
+expo go 中是不支持 expo-updates 的，所以需要判断检测时机
+
+```tsx
+import Constants from "expo-constants";
+import * as Updates from "expo-updates";
+
+/** 检测函数 */
+async function onFetchUpdateAsync() {
+  // 独立运行时（你通过 expo build 或 eas build 构建了独立应用（APK 或 IPA）、用户从应用商店或直接安装包安装并运行应用）才检查更新
+  if (Constants.executionEnvironment === "standalone") {
+    try {
+      const update = await Updates.checkForUpdateAsync();
+
+      if (update.isAvailable) {
+        await Updates.fetchUpdateAsync();
+        await Updates.reloadAsync();
+      }
+    } catch (error) {
+      // You can also add an alert() to see the error message in case of an error when fetching updates.
+      alert(`Error fetching latest Expo update: ${error}`);
+    }
+  }
+}
+
+useEffect(() => {
+  /** 检测 */
+  onFetchUpdateAsync();
+}, []);
+```

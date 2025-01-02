@@ -9,7 +9,8 @@
       "distribution": "internal",
       "ios": {},
       "android": {},
-      "environment": "development"
+      "environment": "development",
+      "channel": "development"
     },
     "preview": {
       "distribution": "internal",
@@ -17,7 +18,8 @@
       "android": {
         "buildType": "apk"
       },
-      "environment": "preview"
+      "environment": "preview",
+      "channel": "preview"
     },
     "production": {
       "autoIncrement": true,
@@ -25,7 +27,8 @@
       "android": {
         "buildType": "apk"
       },
-      "environment": "production"
+      "environment": "production",
+      "channel": "production"
     }
   },
   "submit": {

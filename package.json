@@ -21,7 +21,10 @@
     "build:ios:prod": "eas build --platform ios --profile production",
     "build:web:dev": "npx cross-env NODE_ENV=development expo export --platform web --clear",
     "build:web:pre": "npx cross-env NODE_ENV=preview expo export --platform web --clear",
-    "build:web:prod": "npx cross-env NODE_ENV=production expo export --platform web --clear"
+    "build:web:prod": "npx cross-env NODE_ENV=production expo export --platform web --clear",
+    "update:dev": "npx cross-env NODE_ENV=development eas update --channel development --message '$npm_config_message'",
+    "update:pre": "npx cross-env NODE_ENV=preview eas update --channel preview --message '$npm_config_message'",
+    "update:prod": "npx cross-env NODE_ENV=production eas update --channel production --message '$npm_config_message'"
   },
   "jest": {
     "preset": "jest-expo"
@@ -52,6 +55,7 @@
     "expo-status-bar": "~2.0.0",
     "expo-symbols": "~0.2.0",
     "expo-system-ui": "~4.0.4",
+    "expo-updates": "~0.26.10",
     "expo-web-browser": "~14.0.1",
     "i18next": "^24.0.2",
     "lodash-es": "^4.17.21",
