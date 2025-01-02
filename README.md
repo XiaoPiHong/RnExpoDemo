@@ -236,3 +236,14 @@ useEffect(() => {
   onFetchUpdateAsync();
 }, []);
 ```
+
+发布：
+
+```bash
+# 发布新版本的前提是需要新建branch 和 channel，然后互相关联
+# 发布新版本需要修改runtimeVersion的版本
+eas update --channel [channel-name] --message "[message]"
+
+# package.json中我写了update:dev/pre/prod脚本来区分渠道，一个渠道对应一个环境
+yarn run update:pre --message="test expo-update"
+```
