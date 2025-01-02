@@ -16,10 +16,12 @@ export default function HomeScreen() {
     // 独立运行时（你通过 expo build 或 eas build 构建了独立应用（APK 或 IPA）、用户从应用商店或直接安装包安装并运行应用）才检查更新
     // if (Constants.executionEnvironment === "standalone") {
     try {
-      toast.info(Constants.executionEnvironment);
+      toast.info(
+        `${Constants.executionEnvironment}${Updates.channel}${Updates.runtimeVersion}`
+      );
       const update = await Updates.checkForUpdateAsync();
       toast.info(Constants.executionEnvironment, {
-        text1: String(update.isAvailable),
+        text1: `${String(update.isAvailable)}`,
       });
       if (update.isAvailable) {
         await Updates.fetchUpdateAsync();
