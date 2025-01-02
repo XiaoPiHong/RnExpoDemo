@@ -3,7 +3,7 @@ import "@/i18n";
 import { useFonts } from "expo-font";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "react-native-reanimated";
 import ReduxProvider from "@/store";
 import ThemeProvider from "@/context/useThemeContext";
@@ -18,6 +18,7 @@ import Constants from "expo-constants";
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const [isAvailable, setIsAvailable] = useState(false);
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
@@ -29,6 +30,7 @@ export default function RootLayout() {
         const update = await Updates.checkForUpdateAsync();
 
         if (update.isAvailable) {
+          setIsAvailable(true);
           await Updates.fetchUpdateAsync();
           await Updates.reloadAsync();
         }
@@ -40,11 +42,13 @@ export default function RootLayout() {
   }
 
   useEffect(() => {
+    onFetchUpdateAsync();
+  }, []);
+
+  useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
     }
-
-    onFetchUpdateAsync();
   }, [loaded]);
 
   if (!loaded) {
@@ -58,7 +62,7 @@ export default function RootLayout() {
           <Slot />
           <NoInternet />
           <Toast />
-          <UpdateCheck />
+          {isAvailable && <UpdateCheck />}
         </ThemeProvider>
       </ReduxProvider>
     </SafeAreaProvider>
