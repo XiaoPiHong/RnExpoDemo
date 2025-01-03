@@ -249,3 +249,7 @@ yarn run update:pre --message="更新的信息"
 
 踩的坑：
 使用 eas build 打包的应用的 runtimeVersion 要和发布 channel 的 runtimeVersion 一致才会检测增量更新，expo-updates 并不是对比 runtimeVersion 的差异来检测的
+
+增量更新 demo：
+
+![](demo/update-demo.gif)
