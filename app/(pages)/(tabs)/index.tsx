@@ -21,7 +21,7 @@ export default function HomeScreen() {
         );
         const update = await Updates.checkForUpdateAsync();
         toast.info(Constants.executionEnvironment, {
-          text1: `${String(update.isAvailable)}`,
+          text1: `${String(update.isAvailable)}${JSON.stringify(update)}`,
         });
         if (update.isAvailable) {
           await Updates.fetchUpdateAsync();

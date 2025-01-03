@@ -207,7 +207,7 @@ eas update:configure
 
 使用：
 
-expo go 中是不支持 expo-updates 的，所以需要判断检测时机
+expo go 运行应用是不支持 expo-updates 的，所以需要判断检测时机
 
 ```tsx
 import Constants from "expo-constants";
@@ -240,10 +240,12 @@ useEffect(() => {
 发布：
 
 ```bash
-# 发布新版本的前提是需要新建branch 和 channel，然后互相关联
-# 发布新版本需要修改runtimeVersion的版本
+# 发布新版本的前提是需要新建branch 和 channel，然后互相关联（关联可在expo官网中手动创建和关联，也可以使用eas-cli使用终端命令创建和关联）
 eas update --channel [channel-name] --message "[message]"
 
 # package.json中我写了update:dev/pre/prod脚本来区分渠道，一个渠道对应一个环境
-yarn run update:pre --message="test expo-update"
+yarn run update:pre --message="更新的信息"
 ```
+
+踩的坑：
+使用 eas build 打包的应用的 runtimeVersion 要和发布 channel 的 runtimeVersion 一致才会检测增量更新，expo-updates 并不是对比 runtimeVersion 的差异来检测的
