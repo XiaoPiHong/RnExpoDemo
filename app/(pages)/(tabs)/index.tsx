@@ -6,7 +6,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import * as Updates from "expo-updates";
 import Constants from "expo-constants";
-import { Button } from "react-native-paper";
+import { Button, Text } from "react-native-paper";
 import useToast from "@/hooks/useToast";
 
 export default function HomeScreen() {
@@ -49,6 +49,7 @@ export default function HomeScreen() {
       }
     >
       <Button onPress={onFetchUpdateAsync}>检查更新</Button>
+      <Text>我是增量更新后的最新版本！！！！！</Text>
       {/* <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Welcome!</ThemedText>
         <HelloWave />
