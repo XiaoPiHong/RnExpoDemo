@@ -14,7 +14,7 @@ export default function HomeScreen() {
 
   async function onFetchUpdateAsync() {
     // 独立运行时
-    if (Constants.executionEnvironment === "bare") {
+    if (Constants.executionEnvironment === "bare" && Platform.OS !== "web") {
       try {
         toast.info(
           `${Constants.executionEnvironment}${Updates.channel}${Updates.runtimeVersion}`
