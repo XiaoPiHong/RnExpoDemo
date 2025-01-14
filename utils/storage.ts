@@ -44,7 +44,7 @@ export const appStorage = {
 
 // 防止上次数据残留
 if (__DEV__) {
-  appStorage.clear();
+  // appStorage.clear();
 }
 
 /**
