@@ -16,7 +16,8 @@
       "distribution": "internal",
       "ios": {},
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "credentialsSource": "local"
       },
       "environment": "preview",
       "channel": "preview"
@@ -25,7 +26,8 @@
       "autoIncrement": true,
       "ios": {},
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "credentialsSource": "local"
       },
       "environment": "production",
       "channel": "production"
