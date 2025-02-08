@@ -84,7 +84,49 @@ web 打包无需使用 eas 云打包，所以是读取本地的.env 配置文件
 
 环境变量的读取有坑：（每个环境变量都必须使用 JavaScript 的点表示法静态引用为 process.env 的属性，才能内联。例如，表达式 process.env.EXPO_PUBLIC_KEY 有效并且将被内联；不支持表达式的替代版本。例如，process.env[\'EXPO_PUBLIC_KEY\'] 或 const {EXPO_PUBLIC_X} = process.env 无效，不会被内联）
 
-11、理解版本号
+11、应用签名密钥
+
+签名密钥能确保应用来自同一个开发者而不是被篡改的应用
+
+- 先生成一个签名密钥
+
+```txt
+密钥库口令：x
+生成签名密钥（在 jdk 中（C:\Program Files\Java\jdk-17\bin）以管理员身份执行命令）
+keytool -genkeypair -v -storetype PKCS12 -keystore my-release-key.keystore -alias 上面的密钥库口令 -keyalg RSA -keysize 2048 -validity 10000
+姓氏名称：x
+组织单位名称：x
+组织名称：x
+市：x
+省：x
+双英文地区：x
+```
+
+- 修改 eas.json 打包的 credentialsSource 配置项，使用本地的证书文件，默认 credentialsSource: "remote"是读取远程的，修改成 local
+
+- 本地根目录新增 credentials.json 文件，eas 执行打包流程的时候会自动读取这个文件
+
+```json
+{
+  "android": {
+    "keystore": {
+      "keystorePath": "android/keystores/my-release-key.keystore", // 安卓的签名文件路径
+      "keystorePassword": "xiaopihong", // 密钥库的密码
+      "keyAlias": "xiaopihong", // 密钥库中密钥的别名（密钥库口令）
+      "keyPassword": "xiaopihong" // 密钥库中密钥的密码
+    }
+  },
+  "ios": {
+    "provisioningProfilePath": "ios/certs/profile.mobileprovision", // ios 的签名文件路径
+    "distributionCertificate": {
+      "path": "ios/certs/dist-cert.p12", // 分发证书
+      "password": "iex3shi9Lohl" // 分发证书的密码
+    }
+  }
+}
+```
+
+12、理解版本号
 
 # Expo 应用版本管理指南
 
@@ -176,7 +218,7 @@ web 打包无需使用 eas 云打包，所以是读取本地的.env 配置文件
    - **确保** `android.versionCode` 和 `ios.buildNumber` 都递增。
 2. 使用脚本或自动化工具（如 GitHub Actions）来管理版本号变化。
 
-12、增量更新（目前使用方案是 expo 官方的 expo-updates 和官方的 EAS Updates 工作流）
+13、增量更新（目前使用方案是 expo 官方的 expo-updates 和官方的 EAS Updates 工作流）
 
 expo-updates 还支持自定义更新服务，但是需要符合 Expo Updates 的规范，它是一种向在多个平台上运行的 Expo 应用程序提供更新的[协议](https://docs.expo.dev/technical-specs/expo-updates-1/)
 

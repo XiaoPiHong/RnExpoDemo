@@ -14,7 +14,9 @@
     },
     "preview": {
       "distribution": "internal",
-      "ios": {},
+      "ios": {
+        "credentialsSource": "local"
+      },
       "android": {
         "buildType": "apk",
         "credentialsSource": "local"
@@ -24,7 +26,9 @@
     },
     "production": {
       "autoIncrement": true,
-      "ios": {},
+      "ios": {
+        "credentialsSource": "local"
+      },
       "android": {
         "buildType": "apk",
         "credentialsSource": "local"
