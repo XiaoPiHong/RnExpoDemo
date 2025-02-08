@@ -1,30 +1,30 @@
 ![](demo/demo.gif)
 
-1、注册 expo 账号
+# 1、注册 expo 账号
 
 https://expo.dev/
 
-2、全局安装
+# 2、全局安装
 
 npm i -g eas-cli expo-cli（expo-cli 用于开发，eas-cli 用于推送云打包）（旧版本的 expo 也是用 expo-cli 创建项目的）
 
-3、新版的 expo 不用使用脚手架创建项目，直接使用命令创建项目
+# 3、新版的 expo 不用使用脚手架创建项目，直接使用命令创建项目
 
 旧版（基于 expo-cli 创建）：yarn create expo-app
 
 新版（expo 51 直接命令创建）：npx create-expo-app@latest
 
-4、手机下载 Expo go 并登录之前注册的账号
+# 4、手机下载 Expo go 并登录之前注册的账号
 
 安卓手机可以到谷歌市场下载 Expo go，但是不知道为什么，下载的速度太慢了。所以我这里提供网页端下载。 https://expo.dev/go 选择最新版下载安装就行了
 
-5、本地 eas-cli 登录
+# 5、本地 eas-cli 登录
 
 npx eas login
 
 输入账号密码登录
 
-6、安装依赖运行 Metro 使用 expo go 调试
+# 6、安装依赖运行 Metro 使用 expo go 调试
 
 yarn start
 
@@ -32,7 +32,7 @@ yarn start
 
 或者通过终端的快捷键在 expo go 中进行调试
 
-7、原生调试（原生调试需要原生开发环境）
+# 7、原生调试（原生调试需要原生开发环境）
 
 npx expo run:ios
 
@@ -40,11 +40,11 @@ npx expo run:android
 
 使用 npx expo prebuild 进行预构建会生成原生 android / ios 目录，原生目录是用来原生调试使用的，在 window 系统下进行预构建无法生成 ios 原生目录（iOS 项目依赖 Xcode，Xcode 是 macOS 上的开发工具，用于处理 iOS 应用的构建、签名和发布。在 Windows 系统上，缺少 Xcode，因此无法生成和管理 iOS 项目）
 
-8、安装第三方依赖注意事项
+# 8、安装第三方依赖注意事项
 
 安装第三方依赖如果依赖涉及到原生交互，最好使用 npx expo install xxx（如：npx expo install react-native-mmkv），因为使用 expo install xxx 会确保安装与当前 Expo SDK 兼容的依赖版本（坑：有很多依赖是不能在 expo go 中启动的，比如 react-native-mmkv，所以如果使用依赖之后报错要看下其社区是不是不支持 expo go 中运行）
 
-9、expo-dev-client 调试
+# 9、expo-dev-client 调试
 
 原生模块（Native Modules）需要与应用程序的原生代码部分（如 iOS 的 Objective-C/Swift 和 Android 的 Java/Kotlin）进行链接。这意味着：1、当你在 React Native 项目中使用自定义的原生包时，必须通过工具（如 react-native link 或自动链接）将原生代码集成到应用的构建流程中。2、然而，Expo Go 是一个预编译的应用程序，无法动态加载新的原生模块。
 
@@ -68,7 +68,7 @@ yarn start 启动项目后打开下载的开发 app，应用就会自动连接�
 | expo go 开发调试         | 否               | 否               | 是                        |
 | expo-dev-client 开发调试 | 是               | 否               | 否                        |
 
-10、打包配置
+# 10、打包配置
 
 由于打包 ios 和 android 是使用 eas 云打包，所以需要在 expo 账号环境变量中增加不同环境的环境变量：
 
@@ -84,7 +84,7 @@ web 打包无需使用 eas 云打包，所以是读取本地的.env 配置文件
 
 环境变量的读取有坑：（每个环境变量都必须使用 JavaScript 的点表示法静态引用为 process.env 的属性，才能内联。例如，表达式 process.env.EXPO_PUBLIC_KEY 有效并且将被内联；不支持表达式的替代版本。例如，process.env[\'EXPO_PUBLIC_KEY\'] 或 const {EXPO_PUBLIC_X} = process.env 无效，不会被内联）
 
-11、应用签名密钥
+# 11、应用签名密钥
 
 签名密钥能确保应用来自同一个开发者而不是被篡改的应用
 
@@ -126,15 +126,15 @@ keytool -genkeypair -v -storetype PKCS12 -keystore my-release-key.keystore -alia
 }
 ```
 
-12、理解版本号
+# 12、理解版本号
 
-# Expo 应用版本管理指南
+## Expo 应用版本管理指南
 
 在 Expo 项目中，`version` 和平台特定的 `android.versionCode` 与 `ios.buildNumber` 都是用于管理应用程序版本的，但它们的用途和定义有所不同：
 
 ---
 
-## **1. `version` (通用版本号)**
+### **1. `version` (通用版本号)**
 
 - **用途**: 表示应用程序的通用版本号，通常是用户可见的。
 - **格式**: 通常是 `major.minor.patch` 的形式，例如 `1.0.0`。
@@ -155,7 +155,7 @@ keytool -genkeypair -v -storetype PKCS12 -keystore my-release-key.keystore -alia
 
 ---
 
-## **2. `android.versionCode` (Android 专用内部版本号)**
+### **2. `android.versionCode` (Android 专用内部版本号)**
 
 - **用途**:
   - 用于标识 Android 应用的唯一版本。
@@ -178,7 +178,7 @@ keytool -genkeypair -v -storetype PKCS12 -keystore my-release-key.keystore -alia
 
 ---
 
-## **3. `ios.buildNumber` (iOS 专用内部构建编号)**
+### **3. `ios.buildNumber` (iOS 专用内部构建编号)**
 
 - **用途**:
   - 用于标识 iOS 应用的唯一构建。
@@ -201,7 +201,7 @@ keytool -genkeypair -v -storetype PKCS12 -keystore my-release-key.keystore -alia
 
 ---
 
-## **总结: 主要区别**
+### **总结: 主要区别**
 
 | 属性                  | 平台    | 用途                                    | 格式        | 是否用户可见 |
 | --------------------- | ------- | --------------------------------------- | ----------- | ------------ |
@@ -211,14 +211,14 @@ keytool -genkeypair -v -storetype PKCS12 -keystore my-release-key.keystore -alia
 
 ---
 
-## **建议使用规范**
+### **建议使用规范**
 
 1. 每次发布新版本：
    - 增加 `version`，同时更新用户可见的版本号。
    - **确保** `android.versionCode` 和 `ios.buildNumber` 都递增。
 2. 使用脚本或自动化工具（如 GitHub Actions）来管理版本号变化。
 
-13、增量更新（目前使用方案是 expo 官方的 expo-updates 和官方的 EAS Updates 工作流）
+# 13、增量更新（目前使用方案是 expo 官方的 expo-updates 和官方的 EAS Updates 工作流）
 
 expo-updates 还支持自定义更新服务，但是需要符合 Expo Updates 的规范，它是一种向在多个平台上运行的 Expo 应用程序提供更新的[协议](https://docs.expo.dev/technical-specs/expo-updates-1/)
 
